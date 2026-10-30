@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoiseLight — O Semáforo do Barulho | Feira de Robótica 6º Ano</title>
+  <meta name="description" content="Demonstração interativa do projeto de robótica educacional NoiseLight com ESP32, simulação 3D, circuito elétrico e explicação do código.">
+  
+  <!-- Fontes do Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Barra de Navegação Superior -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <span>🚦 NoiseLight</span>
+        <span class="brand-badge">Feira de Robótica</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#secao-3d">🕹️ 1. Simulação 3D</a></li>
+        <li><a href="#secao-circuito">⚡ 2. Corrente Elétrica</a></li>
+        <li><a href="#secao-codigo">💻 3. Código-Fonte</a></li>
+      </ul>
+      <a href="https://github.com/luisfpatrocinio/NoiseLight" target="_blank" rel="noopener noreferrer" class="btn-github">
+        <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        Ver no GitHub
+      </a>
+    </div>
+  </header>
+
+  <!-- Banner de Apresentação Hero -->
+  <section class="hero">
+    <div class="hero-tag">🌟 Projeto Educacional para o 6º Ano do Ensino Fundamental</div>
+    <h1>O <span class="highlight">Semáforo do Barulho</span> com ESP32</h1>
+    <p>
+      Um dispositivo inteligente que monitora o nível de ruído da sala de aula em tempo real.
+      Aprenda como a tecnologia, a eletrônica e a programação se unem para criar um ambiente de estudo agradável e harmonioso.
+    </p>
+
+    <div class="status-pill-group">
+      <div class="status-pill">
+        <span class="indicator-dot dot-green"></span>
+        <strong>Verde:</strong> Silêncio (&lt; 2 disparos/s)
+      </div>
+      <div class="status-pill">
+        <span class="indicator-dot dot-yellow"></span>
+        <strong>Amarelo:</strong> Atenção (2 a 14 disparos/s)
+      </div>
+      <div class="status-pill">
+        <span class="indicator-dot dot-red"></span>
+        <strong>Vermelho:</strong> Alerta Piscando (≥ 15 disparos/s)
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <!-- ========================================== -->
+    <!-- SEÇÃO 1: PROJETO EM 3D INTERATIVO          -->
+    <!-- ========================================== -->
+    <section id="secao-3d" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Seção 1</span>
+          <h2 class="section-title">🕹️ Maquete Virtual 3D em Tempo Real</h2>
+          <p class="section-desc">
+            Interaja com o modelo tridimensional do projeto. Ajuste o nível de barulho, teste cenários pré-definidos ou ative o microfone do seu computador para ver o semáforo reagir ao som da sua voz!
+          </p>
+        </div>
+      </div>
+
+      <div class="sim-grid">
+        <!-- Visualizador 3D -->
+        <div class="viewport-3d-wrapper" id="canvas-3d-box">
+          <div class="viewport-overlay">
+            <div class="overlay-status" id="status-badge">🟢 Silêncio (Ideal)</div>
+            <div style="font-size: 0.75rem; color: #94a3b8; max-width: 280px;" id="status-desc">
+              Abaixo de 2 disparos/s: Sala em silêncio.
+            </div>
+          </div>
+          <div class="viewport-hints">
+            🖱️ Clique e arraste para girar em 3D | Role o scroll para zoom
+          </div>
+        </div>
+
+        <!-- Painel de Controles do Simulador -->
+        <div class="control-panel">
+          <div class="control-group">
+            <div class="control-label">
+              <span>Disparos de Som / Segundo:</span>
+              <span class="control-value" id="noise-val">0</span>
+            </div>
+            <input type="range" id="noise-slider" min="0" max="30" value="0">
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Cenários da Sala de Aula:</label>
+            <div class="preset-buttons">
+              <button class="btn-preset active" data-value="0">
+                <span>🤫 Prova / Concentração</span>
+                <small>0 disparos (Verde)</small>
+              </button>
+              <button class="btn-preset" data-value="6">
+                <span>👥 Trabalho em Grupo</span>
+                <small>6 disparos (Amarelo)</small>
+              </button>
+              <button class="btn-preset" data-value="22">
+                <span>📢 Recreio / Gritaria</span>
+                <small>22 disparos (Vermelho)</small>
+              </button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <button class="btn-mic" id="btn-mic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="22"></line>
+              </svg>
+              🎙️ Testar com Microfone Real
+            </button>
+            <p style="font-size: 0.72rem; color: #94a3b8; text-align: center;">
+              Fale ou bata palmas para o semáforo reagir ao vivo!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SEÇÃO 2: CORRENTE ELÉTRICA & ELETRÔNICA    -->
+    <!-- ========================================== -->
+    <section id="secao-circuito" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Seção 2</span>
+          <h2 class="section-title">⚡ Como o ESP32 Controla os LEDs?</h2>
+          <p class="section-desc">
+            Veja a corrente elétrica (fluxo ordenado de elétrons) saindo dos pinos GPIO do ESP32, passando pelo resistor protetor e iluminando o LED.
+          </p>
+        </div>
+      </div>
+
+      <div class="circuit-layout">
+        <!-- Canvas Animado do Circuito -->
+        <div class="circuit-canvas-box">
+          <canvas id="canvas-circuit"></canvas>
+        </div>
+
+        <!-- Painel Conceitual e Seletor de LEDs -->
+        <div class="circuit-panel">
+          <div class="control-group">
+            <label class="control-label">Selecione o LED para ver o circuito:</label>
+            <div class="led-picker">
+              <button class="led-pick-btn active-green" data-led="green">
+                <span class="indicator-dot dot-green"></span>
+                <span>GPIO 25 (Verde)</span>
+              </button>
+              <button class="led-pick-btn" data-led="yellow">
+                <span class="indicator-dot dot-yellow"></span>
+                <span>GPIO 26 (Amarelo)</span>
+              </button>
+              <button class="led-pick-btn" data-led="red">
+                <span class="indicator-dot dot-red"></span>
+                <span>GPIO 27 (Vermelho)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Medições em Tempo Real -->
+          <div class="formula-card">
+            <div style="font-size: 0.75rem; color: #38bdf8; margin-bottom: 0.4rem; font-weight: bold;" id="circuit-state-badge">
+              CORRENTE ATIVA NO GPIO 25
+            </div>
+            <div>⚡ <strong>Tensão no Pino:</strong> <span id="calc-voltage">3.3 V (HIGH)</span></div>
+            <div>💡 <strong>Queda no LED:</strong> <span id="calc-vled">2.0 V</span></div>
+            <div>🌊 <strong>Corrente Resultante:</strong> <span id="calc-current">5.9 mA</span></div>
+          </div>
+
+          <!-- Explicação Didática para o 6º Ano -->
+          <div class="concept-box">
+            <h4>💡 Por que usamos o Resistor?</h4>
+            <p>
+              O ESP32 fornece <strong>3.3 Volts</strong>, mas o LED precisa de cerca de <strong>2.0 Volts</strong>. Sem o resistor, a corrente elétrica seria tão alta que queimaria o filamento do LED em frações de segundo! O resistor de <strong>220 Ω</strong> funciona como um redutor de velocidade, mantendo a corrente segura em aproximadamente 6 miliamperes.
+            </p>
+          </div>
+
+          <div class="concept-box">
+            <h4>🔬 O que é Nível Lógico (HIGH e LOW)?</h4>
+            <p>
+              Quando o código executa <code>digitalWrite(pino, HIGH)</code>, o ESP32 fecha uma chave interna conectando o pino aos 3.3V, fazendo os elétrons correrem. Quando executa <code>LOW</code>, ele desliga a energia (0V).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SEÇÃO 3: CÓDIGO-FONTE & PRINCIPAIS FUNÇÕES -->
+    <!-- ========================================== -->
+    <section id="secao-codigo" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Seção 3</span>
+          <h2 class="section-title">💻 O Código do ESP32 Passo a Passo</h2>
+          <p class="section-desc">
+            Descubra as principais funções da programação do semáforo. Clique em cada conceito abaixo para ver como o código em C++ / Arduino foi construído.
+          </p>
+        </div>
+      </div>
+
+      <div class="code-grid">
+        <!-- Navegação de Tópicos do Código -->
+        <div class="code-nav">
+          <button class="code-nav-btn active" data-section="setup">
+            <strong>1. Configuração dos Pinos</strong>
+            <span><code>setup()</code> &amp; <code>pinMode()</code></span>
+          </button>
+          <button class="code-nav-btn" data-section="sampling">
+            <strong>2. Janela de Amostragem (1s)</strong>
+            <span>Contagem com <code>millis()</code></span>
+          </button>
+          <button class="code-nav-btn" data-section="debounce">
+            <strong>3. Filtro Anti-Eco</strong>
+            <span>Debounce acústico com <code>delay(5)</code></span>
+          </button>
+          <button class="code-nav-btn" data-section="decision">
+            <strong>4. Lógica do Semáforo</strong>
+            <span>Condicionais <code>if</code>, <code>else if</code></span>
+          </button>
+          <button class="code-nav-btn" data-section="blink">
+            <strong>5. Alarme Piscante</strong>
+            <span>Efeito estroboscópico de alerta</span>
+          </button>
+        </div>
+
+        <!-- Visualizador de Código -->
+        <div class="code-viewer-container">
+          <div class="code-viewer-header">
+            <div class="window-dots">
+              <span class="dot-close"></span>
+              <span class="dot-min"></span>
+              <span class="dot-max"></span>
+            </div>
+            <span>src/main.cpp</span>
+            <span>C++ (Arduino / ESP32)</span>
+          </div>
+
+          <pre class="code-content"><code id="code-display"><span class="hl-com">// 1. Função executada uma única vez ao ligar o ESP32</span>
+<span class="hl-type">void</span> <span class="hl-func">setup</span>() {
+  <span class="hl-func">Serial</span>.<span class="hl-func">begin</span>(<span class="hl-num">115200</span>); <span class="hl-com">// Comunicação com o computador</span>
+
+  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_SENSOR_SOM, <span class="hl-kw">INPUT</span>);  <span class="hl-com">// Sensor de som envia dados para o ESP32</span></span>
+  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_VERDE, <span class="hl-kw">OUTPUT</span>);   <span class="hl-com">// Pino envia corrente para o LED Verde</span></span>
+  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_AMARELO, <span class="hl-kw">OUTPUT</span>); <span class="hl-com">// Pino envia corrente para o LED Amarelo</span></span>
+  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_VERMELHO, <span class="hl-kw">OUTPUT</span>);<span class="hl-com">// Pino envia corrente para o LED Vermelho</span></span>
+}</code></pre>
+
+          <div class="code-explanation">
+            <h5>💡 Como isso funciona?</h5>
+            <p id="code-explanation-text">
+              No <code>setup()</code>, definimos o papel de cada pino. O pino do microfone é configurado como <strong>INPUT</strong> (entrada de dados auditivos) e os pinos dos LEDs são configurados como <strong>OUTPUT</strong> (saídas capazes de fornecer 3.3V para acender os componentes).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <div class="footer-content">
+      <div class="badge-tag-footer">🤖 Robótica &amp; Educação STEAM</div>
+      <p>
+        <strong>NoiseLight — Semáforo do Barulho</strong> | Feira de Ciências e Robótica do 6º Ano do Ensino Fundamental.
+      </p>
+      <p style="font-size: 0.8rem; color: #64748b;">
+        Desenvolvido com carinho para inspirar jovens mentes na exploração da eletrônica, pensamento computacional e convivência escolar.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bibliotecas Three.js e OrbitControls via CDN confiável -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Módulos da Aplicação -->
+  <script src="simulator3d.js"></script>
+  <script src="circuit.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

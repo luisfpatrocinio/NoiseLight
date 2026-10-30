@@ -3,6 +3,22 @@
 > **Projeto para a Feira de Ciências e Robótica — Alunos do 6º Ano do Ensino Fundamental**  
 > Desenvolvido com microcontrolador **ESP32**, sensor de som digital e sinalização luminosa por LEDs.
 
+[![GitHub Pages](https://img.shields.io/badge/Demo%20Interativa-GitHub%20Pages-38bdf8?style=for-the-badge&logo=googlechrome&logoColor=white)](https://luisfpatrocinio.github.io/NoiseLight/)
+[![PlatformIO](https://img.shields.io/badge/PlatformIO-ESP32-f97316?style=for-the-badge&logo=platformio&logoColor=white)](https://platformio.org/)
+[![Licença](https://img.shields.io/badge/Licen%C3%A7a-MIT-10b981?style=for-the-badge)](LICENSE)
+
+---
+
+## 🌐 Demonstração Interativa Online
+
+Acesse a página interativa de apresentação do projeto:  
+👉 **[https://luisfpatrocinio.github.io/NoiseLight/](https://luisfpatrocinio.github.io/NoiseLight/)**
+
+A página conta com **3 seções interativas especiais**:
+1. **🕹️ Maquete 3D em Tempo Real:** Modelo tridimensional com ESP32, protoboard e LEDs luminosos, com controle de ruído por slider, cenários escolares e suporte a **microfone real via Web Audio API**.
+2. **⚡ Circuito Elétrico & Corrente:** Demonstração animada dos elétrons fluindo pelos pinos GPIO, o papel protetor do resistor de 220Ω (Lei de Ohm) e a emissão de fótons pelos LEDs.
+3. **💻 Explorador de Código Passo a Passo:** Explicação didática de cada função em C++ (`setup`, `millis`, debounce e tomadas de decisão).
+
 ---
 
 ## 📖 Sobre o Projeto
@@ -11,11 +27,9 @@ Em uma sala de aula ou no ambiente escolar, o excesso de ruído pode atrapalhar 
 
 O **NoiseLight (Semáforo do Barulho)** é uma solução de robótica educacional e IoT criada para monitorar o volume sonoro do ambiente em tempo real e fornecer um feedback visual imediato, igual a um semáforo de trânsito:
 
-* 🟢 **Verde (Silêncio / Calmo):** Volume adequado para estudo e atividades concentradas.
-* 🟡 **Amarelo (Atenção / Murmúrios):** Conversas moderadas; ponto de atenção antes de virar bagunça.
-* 🔴 **Vermelho Piscando (Alerta / Barulho Alto):** Conversa alta, gritos ou agitação excessiva!
-
-Além de ser um dispositivo útil para a escola, o projeto ensina conceitos práticos de **programação**, **sensores**, **eletrônica** e **conscientização auditiva**.
+* 🟢 **Verde (Silêncio / Calmo):** Volume adequado para estudo e atividades concentradas (< 2 disparos/s).
+* 🟡 **Amarelo (Atenção / Murmúrios):** Conversas moderadas; ponto de atenção antes de virar bagunça (2 a 14 disparos/s).
+* 🔴 **Vermelho Piscando (Alerta / Barulho Alto):** Conversa alta, gritos ou agitação excessiva (≥ 15 disparos/s)!
 
 ---
 
@@ -23,13 +37,34 @@ Além de ser um dispositivo útil para a escola, o projeto ensina conceitos prá
 
 O microcontrolador **ESP32** funciona como o "cérebro" do sistema:
 
-1. **Janela de Observação (1 segundo):** A cada segundo, o ESP32 analisa continuamente o sinal recebido pelo sensor de som.
+1. **Janela de Observação (1 segundo):** A cada segundo, o ESP32 analisa continuamente o sinal recebido pelo sensor de som usando a função `millis()`.
 2. **Contagem de Disparos de Som:** Cada vez que uma onda sonora ultrapassa a sensibilidade ajustada no sensor, o pino digital envia um pulso elétrico (`HIGH`). O código incrementa um contador com uma pausa rápida anti-eco (`delay(5ms)`).
 3. **Decisão Automática:**
    * **Menos de 2 disparos por segundo:** Acende apenas o **LED Verde**.
    * **De 2 a 14 disparos por segundo:** Acende apenas o **LED Amarelo**.
    * **15 ou mais disparos por segundo:** Apaga os demais e faz o **LED Vermelho piscar** rapidamente em sinal de alerta!
 4. **Monitoramento Serial:** A contagem de disparos é enviada para o computador via porta serial (115200 bps), permitindo aos alunos visualizarem os dados numéricos na tela.
+
+---
+
+## 📁 Estrutura de Pastas do Projeto
+
+```text
+NoiseLight/
+├── docs/                      # 🌐 Página Web Interativa de Apresentação (GitHub Pages)
+│   ├── index.html             # Estrutura HTML da apresentação (3 seções)
+│   ├── style.css              # Estilos visuais, Dark Mode e responsividade
+│   ├── app.js                 # Controlador principal, microfone real e eventos
+│   ├── simulator3d.js         # Maquete 3D interativa em Three.js
+│   └── circuit.js             # Animação do fluxo de corrente elétrica e Lei de Ohm
+├── src/                       # 🧠 Código-Fonte do Microcontrolador ESP32
+│   └── main.cpp               # Firmware completo e documentado em C++ / Arduino
+├── include/                   # Cabeçalhos do PlatformIO
+├── lib/                       # Bibliotecas adicionais (se necessário)
+├── test/                      # Testes unitários do firmware
+├── platformio.ini             # Arquivo de configuração do PlatformIO
+└── README.md                  # Documentação completa do projeto
+```
 
 ---
 
@@ -81,19 +116,20 @@ Na plaquinha do sensor de som existe um **trimpot azul com parafuso** (potenciô
 ```cpp
 #include <Arduino.h>
 
-// Pinos configurados no ESP32
-int pinoSensorSom = 34; // Entrada digital ligada no D0 do sensor
-int ledVerde = 25;      
-int ledAmarelo = 26;    
-int ledVermelho = 27;   
+const int PINO_SENSOR_SOM  = 34; // Entrada digital ligada no D0 do sensor de som
+const int PINO_LED_VERDE   = 25; // Controle do LED Verde (Silêncio)
+const int PINO_LED_AMARELO = 26; // Controle do LED Amarelo (Atenção)
+const int PINO_LED_VERMELHO= 27; // Controle do LED Vermelho (Alerta)
+
+const int LIMIAR_SILENCIO = 2;   // < 2 = Verde
+const int LIMIAR_MODERADO = 15;  // 2 a 14 = Amarelo; >= 15 = Vermelho
 
 void setup() {
   Serial.begin(115200); 
-  pinMode(pinoSensorSom, INPUT);
-  
-  pinMode(ledVerde, OUTPUT);
-  pinMode(ledAmarelo, OUTPUT);
-  pinMode(ledVermelho, OUTPUT);
+  pinMode(PINO_SENSOR_SOM, INPUT);
+  pinMode(PINO_LED_VERDE, OUTPUT);
+  pinMode(PINO_LED_AMARELO, OUTPUT);
+  pinMode(PINO_LED_VERMELHO, OUTPUT);
 }
 
 void loop() {
@@ -102,37 +138,31 @@ void loop() {
 
   // Janela de amostragem de 1 segundo (1000 milissegundos)
   while (millis() - tempoInicio < 1000) {
-    if (digitalRead(pinoSensorSom) == HIGH) {
+    if (digitalRead(PINO_SENSOR_SOM) == HIGH) {
       contadorDeRuido++;
-      delay(5); // Pausa anti-repique / eco
+      delay(5); // Pausa anti-repique / eco (Debounce)
     }
   }
 
-  Serial.print("Disparos de barulho neste segundo: ");
-  Serial.println(contadorDeRuido);
-
-  // Lógica do Semáforo
-  if (contadorDeRuido < 2) { 
-    // Silêncio
-    digitalWrite(ledVerde, HIGH);
-    digitalWrite(ledAmarelo, LOW);
-    digitalWrite(ledVermelho, LOW);
+  // Lógica de Decisão do Semáforo
+  if (contadorDeRuido < LIMIAR_SILENCIO) { 
+    digitalWrite(PINO_LED_VERDE, HIGH);
+    digitalWrite(PINO_LED_AMARELO, LOW);
+    digitalWrite(PINO_LED_VERMELHO, LOW);
   } 
-  else if (contadorDeRuido >= 2 && contadorDeRuido < 15) { 
-    // Murmúrio / Barulho moderado
-    digitalWrite(ledVerde, LOW);
-    digitalWrite(ledAmarelo, HIGH);
-    digitalWrite(ledVermelho, LOW);
+  else if (contadorDeRuido < LIMIAR_MODERADO) { 
+    digitalWrite(PINO_LED_VERDE, LOW);
+    digitalWrite(PINO_LED_AMARELO, HIGH);
+    digitalWrite(PINO_LED_VERMELHO, LOW);
   } 
   else { 
-    // Barulho alto!
-    digitalWrite(ledVerde, LOW);
-    digitalWrite(ledAmarelo, LOW);
+    digitalWrite(PINO_LED_VERDE, LOW);
+    digitalWrite(PINO_LED_AMARELO, LOW);
     
-    // Pisca o LED Vermelho em alerta
-    digitalWrite(ledVermelho, HIGH);
+    // Vermelho piscando em sinal de alerta
+    digitalWrite(PINO_LED_VERMELHO, HIGH);
     delay(100);
-    digitalWrite(ledVermelho, LOW);
+    digitalWrite(PINO_LED_VERMELHO, LOW);
     delay(100);
   }
 }
@@ -144,48 +174,26 @@ void loop() {
 
 O projeto está organizado no formato padrão do **PlatformIO** (para VS Code):
 
-### Pré-requisitos
-* [Visual Studio Code](https://code.visualstudio.com/) instalado.
-* Extensão **PlatformIO IDE** instalada no VS Code.
-* Driver da placa ESP32 (CP2102 ou CH340, dependendo do modelo da sua placa).
-
-### Passo a Passo
-1. Clone este repositório ou baixe a pasta do projeto:
+1. Clone este repositório:
    ```bash
    git clone https://github.com/luisfpatrocinio/NoiseLight.git
    ```
-2. Abra a pasta do projeto no **VS Code**.
-3. O PlatformIO detectará automaticamente o arquivo `platformio.ini`.
-4. Conecte o ESP32 ao computador pelo cabo USB.
-5. Na barra inferior azul do VS Code:
-   * Clique no ícone de **Build** (✓) para compilar.
-   * Clique no ícone de **Upload** (➡️) para gravar no ESP32.
-   * Clique no ícone de **Serial Monitor** (tomada ou plugue) para acompanhar a contagem de disparos em tempo real a 115200 baud.
+2. Abra a pasta do projeto no **VS Code** com a extensão **PlatformIO IDE** instalada.
+3. Conecte o ESP32 ao computador via cabo USB.
+4. Clique no ícone de **Build** (✓) e depois em **Upload** (➡️).
+5. Abra o **Serial Monitor** em 115200 baud para acompanhar a contagem em tempo real!
 
 ---
 
 ## 🎓 Aprendizados Pedagógicos (BNCC & Robótica)
 
-Este projeto estimula diversas competências do Ensino Fundamental II:
-
-* **Pensamento Computacional:** Entendimento de condicionais (`if`, `else if`, `else`), laços de repetição (`while`), amostragem temporal (`millis()`) e debounce.
-* **Eletrônica e Física:** Circuito elétrico fechado, fluxo de corrente, polaridade de diodos emissores de luz (LEDs), resistência elétrica (Lei de Ohm) e ondas acústicas.
-* **Cidadania e Convivência Escolar:** Conscientização sobre poluição sonora e criação de um ambiente agradável de colaboração e estudo coletivo.
-* **Prototipagem e Investigação Científica:** Calibração empírica de sensores e validação de hipóteses por meio de testes práticos.
-
----
-
-## 💡 Ideias de Melhorias Futuras
-
-Para as próximas fases da feira ou edições do projeto:
-- [ ] Adicionar um **Buzzer piezoelétrico** para soar um "bip" curto quando entrar no estado vermelho.
-- [ ] Integrar um **Display LCD I2C 16x2** ou **OLED SSD1306** exibindo mensagens como *"Shhh! Silêncio por favor"*.
-- [ ] Criar uma maquete física de papelão, MDF ou impressão 3D em formato de semáforo de trânsito real.
-- [ ] Conectar ao Wi-Fi do ESP32 para salvar o histórico de ruídos da sala em uma planilha ou dashboard online (IoT).
+* **Pensamento Computacional:** Condicionais (`if/else`), repetições (`while`), temporização (`millis`) e filtros de sinal (`debounce`).
+* **Eletrônica e Física:** Circuitos fechados, polaridade de semicondutores (LEDs), cálculo de resistores (Lei de Ohm: $V = R \cdot I$) e propagação de ondas acústicas.
+* **Cidadania e Convivência Escolar:** Conscientização sobre poluição sonora e colaboração para um ambiente de estudos agradável.
 
 ---
 
 ## 👨‍🏫 Autoria e Créditos
 
-Projeto desenvolvido para demonstração prática e pedagógica na Feira de Robótica Escolar.  
+Projeto desenvolvido para demonstração prática e pedagógica na Feira de Ciências e Robótica do 6º Ano do Ensino Fundamental.  
 Sinta-se à vontade para clonar, estudar, adaptar e usar em sala de aula! ⭐
