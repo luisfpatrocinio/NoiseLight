@@ -80,7 +80,7 @@ class CircuitSimulator {
     
     if (elState) {
       elState.innerText = `CORRENTE ATIVA NO GPIO ${pinNumber}`;
-      elState.style.color = '#38bdf8';
+      elState.style.color = '#ff5500';
     }
   }
 
@@ -110,20 +110,26 @@ class CircuitSimulator {
     const top = h * 0.28;
     const bottom = h * 0.78;
 
-    // Fundo da Protoboard / Placa
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
+    // Fundo da Protoboard / Placa com geometria limpa retangular (Zero Border-Radius)
+    ctx.fillStyle = 'rgba(18, 18, 24, 0.8)';
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.roundRect(left - 20, top - 45, (right - left) + 40, (bottom - top) + 85, 12);
+    ctx.rect(left - 20, top - 45, (right - left) + 40, (bottom - top) + 85);
     ctx.fill();
     ctx.stroke();
 
+    // Rótulo discreto
+    ctx.fillStyle = '#71717a';
+    ctx.font = '500 11px "Plus Jakarta Sans", sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('DIAGRAMA DE CARGA // GPIO 3.3V', left - 8, top - 25);
+
     // 1. Trilha do fio condutor
-    ctx.strokeStyle = isFlowing ? 'rgba(56, 189, 248, 0.4)' : '#334155';
-    ctx.lineWidth = 6;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+    ctx.strokeStyle = isFlowing ? 'rgba(255, 85, 0, 0.55)' : '#27272a';
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'butt';
+    ctx.lineJoin = 'miter';
 
     ctx.beginPath();
     ctx.moveTo(left, bottom); // GND
@@ -162,61 +168,62 @@ class CircuitSimulator {
   }
 
   drawSwitch(ctx, x, y, isClosed) {
-    ctx.fillStyle = '#0f172a';
-    ctx.strokeStyle = '#64748b';
-    ctx.lineWidth = 2;
+    ctx.fillStyle = '#18181c';
+    ctx.strokeStyle = '#27272a';
+    ctx.lineWidth = 1;
 
     ctx.beginPath();
-    ctx.arc(x, y - 25, 4, 0, Math.PI * 2);
-    ctx.arc(x, y + 25, 4, 0, Math.PI * 2);
+    ctx.rect(x - 3, y - 24, 6, 6);
+    ctx.rect(x - 3, y + 18, 6, 6);
     ctx.fill();
     ctx.stroke();
 
     // Braço da chave lógica
-    ctx.strokeStyle = isClosed ? '#38bdf8' : '#ef4444';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = isClosed ? '#ff5500' : '#52525b';
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(x, y + 25);
+    ctx.moveTo(x, y + 18);
     if (isClosed) {
-      ctx.lineTo(x, y - 25);
+      ctx.lineTo(x, y - 18);
     } else {
-      ctx.lineTo(x + 22, y - 15); // Aberta
+      ctx.lineTo(x + 18, y - 10);
     }
     ctx.stroke();
 
     // Label
-    ctx.fillStyle = isClosed ? '#38bdf8' : '#94a3b8';
-    ctx.font = '10px Inter, sans-serif';
+    ctx.fillStyle = isClosed ? '#ff5500' : '#a1a1aa';
+    ctx.font = '500 10px "Plus Jakarta Sans", sans-serif';
     ctx.textAlign = 'right';
-    ctx.fillText(isClosed ? 'Chave HIGH (Ligada)' : 'Chave LOW (Aberta)', x - 12, y + 4);
+    ctx.fillText(isClosed ? 'MOSFET: HIGH (3.3V)' : 'MOSFET: LOW (0.0V)', x - 12, y + 4);
   }
 
   drawEspPin(ctx, x, y, isHigh) {
-    ctx.fillStyle = '#0284c7';
-    ctx.strokeStyle = '#38bdf8';
-    ctx.lineWidth = 2;
+    ctx.fillStyle = '#18181c';
+    ctx.strokeStyle = isHigh ? '#ff5500' : '#27272a';
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.roundRect(x - 30, y - 35, 60, 30, 6);
+    ctx.rect(x - 32, y - 32, 64, 28);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = '#f4f4f5';
+    ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('ESP32', x, y - 20);
-    ctx.font = '9px monospace';
-    ctx.fillText(isHigh ? '3.3V OUT' : '0.0V (OFF)', x, y - 9);
+    ctx.fillText('ESP32', x, y - 18);
+    ctx.font = '500 9px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = isHigh ? '#ff5500' : '#71717a';
+    ctx.fillText(isHigh ? '3.3V OUT' : '0.0V OFF', x, y - 8);
   }
 
   drawResistor(ctx, x, y) {
-    const rw = 56;
-    const rh = 18;
+    const rw = 52;
+    const rh = 16;
 
-    ctx.fillStyle = '#d97706'; // Corpo de cerâmica bege/marrom
-    ctx.strokeStyle = '#f59e0b';
-    ctx.lineWidth = 2;
+    ctx.fillStyle = '#222228';
+    ctx.strokeStyle = '#27272a';
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.roundRect(x - rw / 2, y - rh / 2, rw, rh, 4);
+    ctx.rect(x - rw / 2, y - rh / 2, rw, rh);
     ctx.fill();
     ctx.stroke();
 
@@ -224,88 +231,84 @@ class CircuitSimulator {
     const bands = ['#ef4444', '#ef4444', '#78350f', '#facc15'];
     bands.forEach((color, i) => {
       ctx.fillStyle = color;
-      ctx.fillRect(x - rw / 2 + 10 + i * 10, y - rh / 2, 4, rh);
+      ctx.fillRect(x - rw / 2 + 10 + i * 9, y - rh / 2, 3, rh);
     });
 
     // Rótulo
-    ctx.fillStyle = '#fde68a';
-    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = '#f4f4f5';
+    ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Resistor 220 Ω', x, y - 18);
-    ctx.font = '9px Inter, sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('(Limita a Corrente)', x, y + 24);
+    ctx.fillText('220 Ω', x, y - 16);
+    ctx.font = '500 9px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#a1a1aa';
+    ctx.fillText('Limitador de Corrente', x, y + 22);
   }
 
   drawLed(ctx, x, y, isLit) {
     let ledColor = '#10b981';
-    let glowColor = 'rgba(16, 185, 129, 0.7)';
     let ledName = 'LED Verde';
 
     if (this.activeLed === 'yellow') {
       ledColor = '#f59e0b';
-      glowColor = 'rgba(245, 158, 11, 0.7)';
       ledName = 'LED Amarelo';
     } else if (this.activeLed === 'red' || this.activeLed === 'red_blink') {
       ledColor = '#ef4444';
-      glowColor = 'rgba(239, 68, 68, 0.7)';
       ledName = 'LED Vermelho';
     }
 
     if (!isLit) {
-      ledColor = '#475569';
-      glowColor = 'transparent';
+      ledColor = '#27272a';
     }
 
-    // Brilho (Glow)
+    // Brilho suave
     if (isLit) {
-      const grad = ctx.createRadialGradient(x, y, 5, x, y, 40);
-      grad.addColorStop(0, glowColor);
+      const grad = ctx.createRadialGradient(x, y, 4, x, y, 32);
+      grad.addColorStop(0, ledColor + '88');
       grad.addColorStop(1, 'transparent');
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(x, y, 40, 0, Math.PI * 2);
+      ctx.arc(x, y, 32, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // Cúpula do LED (Ânodo (+) na esquerda, Cátodo (-) na direita)
+    // Cúpula do LED
     ctx.fillStyle = ledColor;
     ctx.beginPath();
-    ctx.arc(x, y, 14, 0, Math.PI * 2);
+    ctx.arc(x, y, 12, 0, Math.PI * 2);
     ctx.fill();
     ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1;
     ctx.stroke();
 
-    // Rótulo do LED e polaridade
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Rótulos
+    ctx.fillStyle = '#f4f4f5';
+    ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(ledName, x, y - 22);
+    ctx.fillText(ledName, x, y - 20);
 
-    ctx.font = '9px Inter, sans-serif';
-    ctx.fillStyle = '#38bdf8';
-    ctx.fillText('Ânodo (+)', x - 18, y + 26);
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('Cátodo (-)', x + 20, y + 26);
+    ctx.font = '500 9px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = '#ff5500';
+    ctx.fillText('Ânodo (+)', x - 18, y + 24);
+    ctx.fillStyle = '#a1a1aa';
+    ctx.fillText('Cátodo (-)', x + 20, y + 24);
   }
 
   drawGnd(ctx, x, y) {
-    ctx.strokeStyle = '#94a3b8';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#71717a';
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(x - 16, y);
-    ctx.lineTo(x + 16, y);
-    ctx.moveTo(x - 10, y + 5);
-    ctx.lineTo(x + 10, y + 5);
-    ctx.moveTo(x - 4, y + 10);
-    ctx.lineTo(x + 4, y + 10);
+    ctx.moveTo(x - 14, y);
+    ctx.lineTo(x + 14, y);
+    ctx.moveTo(x - 9, y + 4);
+    ctx.lineTo(x + 9, y + 4);
+    ctx.moveTo(x - 4, y + 8);
+    ctx.lineTo(x + 4, y + 8);
     ctx.stroke();
 
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '10px monospace';
+    ctx.fillStyle = '#a1a1aa';
+    ctx.font = '500 10px "Plus Jakarta Sans", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('GND (0V)', x, y + 24);
+    ctx.fillText('GND (0V)', x, y + 22);
   }
 
   drawElectrons(ctx, left, right, top, bottom) {
@@ -317,7 +320,6 @@ class CircuitSimulator {
       let px = left;
       let py = top;
 
-      // Trajetória: Top-Left -> Top-Right -> Bottom-Right -> Bottom-Left -> Top-Left
       const seg1 = right - left;
       const seg2 = bottom - top;
       const seg3 = right - left;
@@ -336,13 +338,10 @@ class CircuitSimulator {
         py = bottom - (dist - seg1 - 2 * seg2);
       }
 
-      ctx.fillStyle = '#38bdf8';
-      ctx.shadowColor = '#38bdf8';
-      ctx.shadowBlur = 6;
+      ctx.fillStyle = '#ff5500';
       ctx.beginPath();
-      ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.shadowBlur = 0;
     });
   }
 

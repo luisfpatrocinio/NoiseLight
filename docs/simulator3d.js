@@ -36,8 +36,8 @@ class NoiseLight3D {
   init() {
     // 1. Cena
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x060911);
-    this.scene.fog = new THREE.FogExp2(0x060911, 0.02);
+    this.scene.background = new THREE.Color(0x08080a);
+    this.scene.fog = new THREE.FogExp2(0x08080a, 0.02);
 
     // 2. Câmera
     const width = this.container.clientWidth || 800;

@@ -4,32 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NoiseLight — O Semáforo do Barulho | Feira de Robótica 6º Ano</title>
-  <meta name="description" content="Demonstração interativa do projeto de robótica educacional NoiseLight com ESP32, simulação 3D, circuito elétrico e explicação do código.">
+  <meta name="description" content="Showcase interativo do projeto educacional NoiseLight com ESP32, maquete 3D virtual, circuito elétrico interativo e análise de código C++.">
   
-  <!-- Fontes do Google -->
+  <!-- Fontes do Google: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Estilos Customizados -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- Canvas Dinâmico de Fundo (60 FPS com Orbes e Partículas Fluindo) -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-grain" aria-hidden="true"></div>
+
   <!-- Barra de Navegação Superior -->
   <header>
     <div class="nav-container">
       <a href="#" class="brand">
-        <span>🚦 NoiseLight</span>
+        <span class="brand-signal-orb"></span>
+        <span>NoiseLight</span>
         <span class="brand-badge">Feira de Robótica</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#secao-3d">🕹️ 1. Simulação 3D</a></li>
-        <li><a href="#secao-circuito">⚡ 2. Corrente Elétrica</a></li>
-        <li><a href="#secao-codigo">💻 3. Código-Fonte</a></li>
+        <li><a href="#secao-3d">1. Simulação 3D</a></li>
+        <li><a href="#secao-circuito">2. Corrente Elétrica</a></li>
+        <li><a href="#secao-codigo">3. Código-Fonte</a></li>
+        <li><a href="#secao-hardware">4. Hardware</a></li>
+        <li><a href="#secao-equipe">5. Equipe</a></li>
       </ul>
       <a href="https://github.com/luisfpatrocinio/NoiseLight" target="_blank" rel="noopener noreferrer" class="btn-github">
-        <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
         </svg>
         Ver no GitHub
@@ -39,7 +46,10 @@
 
   <!-- Banner de Apresentação Hero -->
   <section class="hero">
-    <div class="hero-tag">🌟 Projeto Educacional para o 6º Ano do Ensino Fundamental</div>
+    <div class="hero-tag">
+      <span class="pulse-dot"></span>
+      <span>Projeto Educacional para o 6º Ano do Ensino Fundamental</span>
+    </div>
     <h1>O <span class="highlight">Semáforo do Barulho</span> com ESP32</h1>
     <p>
       Um dispositivo inteligente que monitora o nível de ruído da sala de aula em tempo real.
@@ -58,6 +68,47 @@
       <div class="status-pill">
         <span class="indicator-dot dot-red"></span>
         <strong>Vermelho:</strong> Alerta Piscando (≥ 15 disparos/s)
+      </div>
+    </div>
+  </section>
+
+  <!-- Pilares Técnicos -->
+  <section class="pillars-section">
+    <div class="pillars-grid">
+      <div class="pillar-item">
+        <div class="pillar-num">01 / Amostragem</div>
+        <div>
+          <div class="pillar-metric">1.0 s</div>
+          <div class="pillar-title">Janela Temporal</div>
+          <p class="pillar-text">Contagem cíclica de pulsos sonoros via millis() sem interromper o processamento da placa.</p>
+        </div>
+      </div>
+
+      <div class="pillar-item">
+        <div class="pillar-num">02 / Processador</div>
+        <div>
+          <div class="pillar-metric">240 MHz</div>
+          <div class="pillar-title">ESP32 Dual-Core</div>
+          <p class="pillar-text">Microcontrolador de alto desempenho com leitura rápida dos pulsos acústicos digitais.</p>
+        </div>
+      </div>
+
+      <div class="pillar-item">
+        <div class="pillar-num">03 / Sinalização</div>
+        <div>
+          <div class="pillar-metric">3 Canais</div>
+          <div class="pillar-title">Feedback Óptico</div>
+          <p class="pillar-text">LEDs difusos de 5mm acionados individualmente com base no nível de ruído detectado.</p>
+        </div>
+      </div>
+
+      <div class="pillar-item">
+        <div class="pillar-num">04 / Proteção</div>
+        <div>
+          <div class="pillar-metric">220 Ω</div>
+          <div class="pillar-title">Lei de Ohm</div>
+          <p class="pillar-text">Resistores limitadores calculados para proteger os semicondutores e limitar a corrente em 6mA.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -82,7 +133,7 @@
         <div class="viewport-3d-wrapper" id="canvas-3d-box">
           <div class="viewport-overlay">
             <div class="overlay-status" id="status-badge">🟢 Silêncio (Ideal)</div>
-            <div style="font-size: 0.75rem; color: #94a3b8; max-width: 280px;" id="status-desc">
+            <div style="font-size: 0.75rem; color: #a1a1aa; max-width: 280px;" id="status-desc">
               Abaixo de 2 disparos/s: Sala em silêncio.
             </div>
           </div>
@@ -121,15 +172,15 @@
 
           <div class="control-group">
             <button class="btn-mic" id="btn-mic">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                 <line x1="12" y1="19" x2="12" y2="22"></line>
               </svg>
               🎙️ Testar com Microfone Real
             </button>
-            <p style="font-size: 0.72rem; color: #94a3b8; text-align: center;">
-              Fale ou bata palmas para o semáforo reagir ao vivo!
+            <p style="font-size: 0.72rem; color: #71717a; text-align: center;">
+              Fale ou bata palmas para o semáforo reagir ao vivo via Web Audio API!
             </p>
           </div>
         </div>
@@ -178,19 +229,19 @@
 
           <!-- Medições em Tempo Real -->
           <div class="formula-card">
-            <div style="font-size: 0.75rem; color: #38bdf8; margin-bottom: 0.4rem; font-weight: bold;" id="circuit-state-badge">
+            <div id="circuit-state-badge">
               CORRENTE ATIVA NO GPIO 25
             </div>
             <div>⚡ <strong>Tensão no Pino:</strong> <span id="calc-voltage">3.3 V (HIGH)</span></div>
             <div>💡 <strong>Queda no LED:</strong> <span id="calc-vled">2.0 V</span></div>
-            <div>🌊 <strong>Corrente Resultante:</strong> <span id="calc-current">5.9 mA</span></div>
+            <div>🌊 <strong>Corrente Resultante:</strong> <span id="calc-current" style="color: var(--led-green);">5.9 mA</span></div>
           </div>
 
           <!-- Explicação Didática para o 6º Ano -->
           <div class="concept-box">
             <h4>💡 Por que usamos o Resistor?</h4>
             <p>
-              O ESP32 fornece <strong>3.3 Volts</strong>, mas o LED precisa de cerca de <strong>2.0 Volts</strong>. Sem o resistor, a corrente elétrica seria tão alta que queimaria o filamento do LED em frações de segundo! O resistor de <strong>220 Ω</strong> funciona como um redutor de velocidade, mantendo a corrente segura em aproximadamente 6 miliamperes.
+              O ESP32 fornece <strong>3.3 Volts</strong>, mas o LED precisa de cerca de <strong>2.0 Volts</strong>. Sem o resistor, a corrente elétrica seria tão alta que queimaria o filamento do LED em frações de segundo! O resistor de <strong>220 Ω</strong> funciona como um limitador de velocidade, mantendo a corrente segura em aproximadamente 6 miliamperes.
             </p>
           </div>
 
@@ -223,19 +274,19 @@
         <div class="code-nav">
           <button class="code-nav-btn active" data-section="setup">
             <strong>1. Configuração dos Pinos</strong>
-            <span><code>setup()</code> &amp; <code>pinMode()</code></span>
+            <span>setup() &amp; pinMode()</span>
           </button>
           <button class="code-nav-btn" data-section="sampling">
             <strong>2. Janela de Amostragem (1s)</strong>
-            <span>Contagem com <code>millis()</code></span>
+            <span>Contagem com millis()</span>
           </button>
           <button class="code-nav-btn" data-section="debounce">
             <strong>3. Filtro Anti-Eco</strong>
-            <span>Debounce acústico com <code>delay(5)</code></span>
+            <span>Debounce acústico com delay(5ms)</span>
           </button>
           <button class="code-nav-btn" data-section="decision">
             <strong>4. Lógica do Semáforo</strong>
-            <span>Condicionais <code>if</code>, <code>else if</code></span>
+            <span>Condicionais if, else if</span>
           </button>
           <button class="code-nav-btn" data-section="blink">
             <strong>5. Alarme Piscante</strong>
@@ -247,9 +298,9 @@
         <div class="code-viewer-container">
           <div class="code-viewer-header">
             <div class="window-dots">
-              <span class="dot-close"></span>
-              <span class="dot-min"></span>
-              <span class="dot-max"></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
             <span>src/main.cpp</span>
             <span>C++ (Arduino / ESP32)</span>
@@ -274,26 +325,309 @@
         </div>
       </div>
     </section>
+
+    <!-- ========================================== -->
+    <!-- SEÇÃO 4: MATERIAIS & HARDWARE (BOM)        -->
+    <!-- ========================================== -->
+    <section id="secao-hardware" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Seção 4</span>
+          <h2 class="section-title">🛠️ Materiais e Especificações do Circuito</h2>
+          <p class="section-desc">
+            Relação completa dos componentes eletrônicos utilizados na montagem da bancada educacional.
+          </p>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="clean-table">
+          <thead>
+            <tr>
+              <th>Componente</th>
+              <th>Especificação Técnica</th>
+              <th>Qtd</th>
+              <th>Conexão no ESP32</th>
+              <th>Função no Projeto</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ESP32 DevKit V1</strong></td>
+              <td>Dual-Core 240MHz, 3.3V Logic, 520KB SRAM</td>
+              <td>1 un</td>
+              <td><span class="tag-pin">3V3 / GND</span></td>
+              <td>Microcontrolador central do semáforo</td>
+            </tr>
+            <tr>
+              <td><strong>Sensor de Som KY-038</strong></td>
+              <td>Microfone Eletreto com comparador digital LM393</td>
+              <td>1 un</td>
+              <td><span class="tag-pin">GPIO 34 (D0)</span></td>
+              <td>Detecção de ondas acústicas e pulsos digitais</td>
+            </tr>
+            <tr>
+              <td><strong>LED 5mm Verde</strong></td>
+              <td>Tensão direta Vf &approx; 2.0V, Corrente If &approx; 6mA</td>
+              <td>1 un</td>
+              <td><span class="tag-pin">GPIO 25</span></td>
+              <td>Sinalizador de ambiente silencioso e tranquilo</td>
+            </tr>
+            <tr>
+              <td><strong>LED 5mm Amarelo</strong></td>
+              <td>Tensão direta Vf &approx; 2.1V, Corrente If &approx; 5.5mA</td>
+              <td>1 un</td>
+              <td><span class="tag-pin">GPIO 26</span></td>
+              <td>Sinalizador de atenção para ruído moderado</td>
+            </tr>
+            <tr>
+              <td><strong>LED 5mm Vermelho</strong></td>
+              <td>Tensão direta Vf &approx; 1.9V, Corrente If &approx; 6.4mA</td>
+              <td>1 un</td>
+              <td><span class="tag-pin">GPIO 27</span></td>
+              <td>Sinalizador estroboscópico de alerta para ruído crítico</td>
+            </tr>
+            <tr>
+              <td><strong>Resistores de Precisão</strong></td>
+              <td>220 Ω, potência 1/4W, filme de carbono</td>
+              <td>3 un</td>
+              <td><span class="tag-pin">Em série</span></td>
+              <td>Limitação de corrente para proteção dos LEDs</td>
+            </tr>
+            <tr>
+              <td><strong>Protoboard Matriz</strong></td>
+              <td>830 pontos de contato metálicos sem solda</td>
+              <td>1 un</td>
+              <td><span class="tag-pin">Bancada</span></td>
+              <td>Base de montagem dos componentes</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SEÇÃO 5: EQUIPE & CRÉDITOS DO PROJETO      -->
+    <!-- ========================================== -->
+    <section id="secao-equipe" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Seção 5</span>
+          <h2 class="section-title">👥 Equipe de Desenvolvimento</h2>
+          <p class="section-desc">
+            Créditos dos alunos do 6º Ano e da coordenação pedagógica na Feira de Ciências e Robótica.
+          </p>
+        </div>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card">
+          <div>
+            <div class="team-role">Orientação Técnica</div>
+            <div class="team-name">Luis Felipe Patrocínio</div>
+            <div class="team-unit">Professor e Mentor STEAM</div>
+          </div>
+          <p class="team-desc">
+            Supervisão pedagógica, arquitetura de sistemas com ESP32, modelagem 3D e introdução aos fundamentos de robótica.
+          </p>
+        </div>
+
+        <div class="team-card">
+          <div>
+            <div class="team-role">Alunos do 6º Ano</div>
+            <div class="team-name">Célula de Circuitos</div>
+            <div class="team-unit">Montagem Física</div>
+          </div>
+          <p class="team-desc">
+            Posicionamento dos componentes na protoboard, dimensionamento dos resistores e conexão dos cabos jumpers.
+          </p>
+        </div>
+
+        <div class="team-card">
+          <div>
+            <div class="team-role">Alunos do 6º Ano</div>
+            <div class="team-name">Célula de Firmware</div>
+            <div class="team-unit">Programação em C++</div>
+          </div>
+          <p class="team-desc">
+            Implementação da lógica condicional if-else, calibração do tempo de amostragem de 1 segundo e testes seriais.
+          </p>
+        </div>
+
+        <div class="team-card">
+          <div>
+            <div class="team-role">Alunos do 6º Ano</div>
+            <div class="team-name">Célula de Testes</div>
+            <div class="team-unit">Medições Acústicas</div>
+          </div>
+          <p class="team-desc">
+            Simulação de situações reais de sala de aula e calibração dos limiares de disparos do sensor KY-038.
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- Rodapé -->
   <footer>
     <div class="footer-content">
-      <div class="badge-tag-footer">🤖 Robótica &amp; Educação STEAM</div>
+      <div class="badge-tag-footer">Robótica &bull; Educação STEAM</div>
       <p>
         <strong>NoiseLight — Semáforo do Barulho</strong> | Feira de Ciências e Robótica do 6º Ano do Ensino Fundamental.
       </p>
-      <p style="font-size: 0.8rem; color: #64748b;">
-        Desenvolvido com carinho para inspirar jovens mentes na exploração da eletrônica, pensamento computacional e convivência escolar.
+      <p style="font-size: 0.8rem; color: #71717a;">
+        Desenvolvido para inspirar jovens mentes na exploração da eletrônica, pensamento computacional e convivência escolar.
       </p>
     </div>
   </footer>
+
+  <!-- Background Dinâmico (Orbes Luminosos & Partículas Conectadas) -->
+  <script>
+    (function () {
+      const canvas = document.getElementById('bg-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      let width = 0;
+      let height = 0;
+      let dpr = 1;
+
+      const mouse = { x: 0, y: 0, targetX: 0, targetY: 0, active: false };
+
+      // Orbes de luz atmosférica fluida
+      const orbs = [
+        { angle: 0, speed: 0.0006, baseR: 440, color: 'rgba(255, 85, 0, 0.12)' },
+        { angle: 2.2, speed: -0.0007, baseR: 380, color: 'rgba(255, 110, 0, 0.08)' },
+        { angle: 4.4, speed: 0.0005, baseR: 480, color: 'rgba(200, 50, 0, 0.10)' }
+      ];
+
+      let particles = [];
+      const particleCount = window.innerWidth < 768 ? 20 : 40;
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+
+        if (!mouse.active) {
+          mouse.x = width * 0.5;
+          mouse.y = height * 0.4;
+          mouse.targetX = mouse.x;
+          mouse.targetY = mouse.y;
+        }
+
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            size: 1 + Math.random() * 1.5,
+            alpha: 0.15 + Math.random() * 0.3
+          });
+        }
+      }
+
+      window.addEventListener('resize', resize);
+      window.addEventListener('mousemove', (e) => {
+        mouse.targetX = e.clientX;
+        mouse.targetY = e.clientY;
+        mouse.active = true;
+      });
+
+      let animationId = null;
+      let isVisible = true;
+
+      document.addEventListener('visibilitychange', () => {
+        isVisible = !document.hidden;
+        if (isVisible && !animationId) {
+          requestAnimationFrame(render);
+        }
+      });
+
+      function render(time) {
+        if (!isVisible) {
+          animationId = null;
+          return;
+        }
+
+        // Interpolação suave do mouse (lerp)
+        mouse.x += (mouse.targetX - mouse.x) * 0.05;
+        mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+        // Fundo escuro profundo
+        ctx.fillStyle = '#08080a';
+        ctx.fillRect(0, 0, width, height);
+
+        // 1. Orbes de luz fluidos
+        orbs.forEach((orb, i) => {
+          orb.angle += orb.speed;
+          const orbitX = width * 0.5 + Math.cos(orb.angle) * (width * 0.25) + (mouse.x - width * 0.5) * (0.04 * (i + 1));
+          const orbitY = height * 0.45 + Math.sin(orb.angle * 1.1) * (height * 0.2) + (mouse.y - height * 0.5) * (0.04 * (i + 1));
+          const currentR = orb.baseR + Math.sin(time * 0.001 + i) * 80;
+
+          const grad = ctx.createRadialGradient(orbitX, orbitY, 0, orbitX, orbitY, Math.max(10, currentR));
+          grad.addColorStop(0, orb.color);
+          grad.addColorStop(0.5, orb.color.replace(/[\d\.]+\)$/, '0.03)'));
+          grad.addColorStop(1, 'rgba(8, 8, 10, 0)');
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(orbitX, orbitY, currentR, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // 2. Partículas e linhas de conexão sutis
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+
+          ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 90) {
+              const lineAlpha = (1 - dist / 90) * 0.1;
+              ctx.strokeStyle = `rgba(255, 110, 0, ${lineAlpha})`;
+              ctx.lineWidth = 0.8;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        animationId = requestAnimationFrame(render);
+      }
+
+      resize();
+      requestAnimationFrame(render);
+    })();
+  </script>
 
   <!-- Bibliotecas Three.js e OrbitControls via CDN confiável -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-  <!-- Módulos da Aplicação -->
+  <!-- Módulos da Aplicação Interativa -->
   <script src="simulator3d.js"></script>
   <script src="circuit.js"></script>
   <script src="app.js"></script>
