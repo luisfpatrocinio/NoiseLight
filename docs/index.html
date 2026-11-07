@@ -3,35 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NoiseLight — O Semáforo do Barulho | Feira de Ciências 6º Ano</title>
-  <meta name="description" content="Apresentação interativa do projeto NoiseLight: maquete 3D, esquema de montagem com ESP32 e microfone MAX4466, e código-fonte explicado.">
+  <title>NoiseLight — O Semáforo do Barulho | Feira de Robótica 6º Ano A</title>
+  <meta name="description" content="Projeto escolar inclusivo com ESP32, microfone MAX4466 e iluminação difusa. Criado por alunos do 6º Ano A para promover conforto sensorial e concentração em sala de aula.">
   
-  <!-- Fontes do Google: Plus Jakarta Sans & JetBrains Mono -->
+  <!-- Fontes do Google: Lexend (Neuro-Inclusiva) & JetBrains Mono (Código) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Estilos Customizados -->
+  <!-- Estilos Customizados Sensory Calm -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Canvas Dinâmico de Fundo (Partículas e Luz Ambiente) -->
+  <!-- Canvas Dinâmico de Fundo (Ondas Acústicas Senoidais Orgânicas) -->
   <canvas id="bg-canvas"></canvas>
-  <div class="bg-grain" aria-hidden="true"></div>
 
   <!-- Barra de Navegação Superior -->
   <header>
     <div class="nav-container">
       <a href="#" class="brand">
-        <span class="brand-signal-orb"></span>
+        <div class="brand-icon-wrap">🚦</div>
         <span>NoiseLight</span>
-        <span class="brand-badge">Feira de Ciências &bull; 6º Ano</span>
+        <span class="brand-badge">Feira de Robótica &bull; 6º Ano A</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#secao-3d">1. Maquete 3D</a></li>
-        <li><a href="#secao-montagem">2. Fiações &amp; Montagem</a></li>
-        <li><a href="#secao-codigo">3. Código-Fonte</a></li>
+        <li><a href="#secao-empatia">1. Por Que o Silêncio?</a></li>
+        <li><a href="#secao-3d">2. Maquete 3D</a></li>
+        <li><a href="#secao-jornada">3. A Jornada do Som</a></li>
+        <li><a href="#secao-montagem">4. Fiações &amp; Montagem</a></li>
+        <li><a href="#secao-codigo">5. Código</a></li>
       </ul>
       <a href="https://github.com/luisfpatrocinio/NoiseLight" target="_blank" rel="noopener noreferrer" class="btn-github">
         <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
@@ -45,42 +46,94 @@
   <!-- Banner de Apresentação Hero -->
   <section class="hero">
     <div class="hero-tag">
-      <span class="pulse-dot"></span>
-      <span>Projeto de Robótica &amp; Educação STEAM</span>
+      <span>🌱 Projeto InovaCEV &bull; Educação Neuro-Inclusiva</span>
     </div>
     <h1>O <span class="highlight">Semáforo do Barulho</span> com ESP32</h1>
     <p>
-      Um dispositivo inteligente com microfone analógico <strong>MAX4466</strong> e <strong>3 LEDs gigantes de 10mm</strong> que monitora o nível de som da sala de aula em tempo real, incentivando a concentração e a convivência escolar.
+      Uma solução Maker pensada pelos alunos do <strong>6º Ano A</strong> para transformar a sala de aula em um ambiente acolhedor, combatendo a sobrecarga sensorial e promovendo a empatia e a concentração através da tecnologia.
     </p>
 
-    <!-- Indicadores de Status do Semáforo -->
+    <!-- Pílulas de Status do Semáforo -->
     <div class="status-pill-group">
       <div class="status-pill">
         <span class="indicator-dot dot-green"></span>
-        <strong>Verde:</strong> Silêncio (Estudo &amp; Concentração)
+        <strong>Verde Sereno:</strong> Silêncio &amp; Conforto (&lt; 60 dB)
       </div>
       <div class="status-pill">
         <span class="indicator-dot dot-yellow"></span>
-        <strong>Amarelo:</strong> Atenção (Conversas em grupo)
+        <strong>Amarelo Âmbar:</strong> Conversa Moderada (60 a 70 dB)
       </div>
       <div class="status-pill">
         <span class="indicator-dot dot-red"></span>
-        <strong>Vermelho:</strong> Alerta (Barulho Excessivo / Pisca)
+        <strong>Vermelho Coral:</strong> Sobrecarga Sonora (&gt; 70 dB)
       </div>
     </div>
   </section>
 
   <main>
     <!-- ======================================================== -->
+    <!-- NOVA SEÇÃO A: EMPATIA EM PRIMEIRO LUGAR                  -->
+    <!-- ======================================================== -->
+    <section id="secao-empatia" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Impacto Social &amp; Inclusão</span>
+          <h2 class="section-title">🧩 Empatia em Primeiro Lugar: Por que o Silêncio Importa?</h2>
+          <p class="section-desc">
+            Mais do que medir decibéis, o Semáforo do Barulho nasceu da pesquisa social realizada pela nossa turma sobre saúde mental, neurodiversidade e convivência escolar harmoniosa.
+          </p>
+        </div>
+      </div>
+
+      <div class="empathy-grid">
+        <!-- Card 1: Autismo -->
+        <div class="empathy-card">
+          <div class="empathy-icon-box empathy-icon-autism">💙</div>
+          <h3>Sobrecarga Sensorial (TEA / Autismo)</h3>
+          <p>
+            Para colegas no espectro autista, o excesso de ruído na sala de aula não é apenas um incômodo passageiro: ele é processado pelo cérebro como dor física e estresse extremo, podendo desencadear crises de sobrecarga sensorial (*meltdowns*). O semáforo ajuda a turma a manter o som em um nível seguro para todos.
+          </p>
+          <div class="empathy-quote">
+            "Um ambiente acusticamente calmo é um direito de todos e um ato de respeito."
+          </div>
+        </div>
+
+        <!-- Card 2: TDAH -->
+        <div class="empathy-card">
+          <div class="empathy-icon-box empathy-icon-adhd">🧠</div>
+          <h3>Foco, Atenção e TDAH</h3>
+          <p>
+            Pesquisas em neuroeducação apontam que barulhos constantes acima de 65 dB quebram o ciclo de atenção de alunos com TDAH. O cérebro precisa gastar o dobro de energia apenas tentando filtrar o ruído de fundo, resultando em exaustão mental e redução drástica da absorção do aprendizado.
+          </p>
+          <div class="empathy-quote">
+            "Menos ruído significa mais capacidade de absorver e criar ideias juntos."
+          </div>
+        </div>
+
+        <!-- Card 3: Autonomia -->
+        <div class="empathy-card">
+          <div class="empathy-icon-box empathy-icon-voice">🤝</div>
+          <h3>Autonomia sem Gritos</h3>
+          <p>
+            Tradicionalmente, para reatar o silêncio, o professor precisa falar mais alto ou gritar, o que gera ainda mais tensão no ar. O Semáforo atua como um juiz visual silencioso e imparcial: a própria turma percebe a luz amarela e se autorregula de maneira gentil e autônoma.
+          </p>
+          <div class="empathy-quote">
+            "A tecnologia substitui ordens verbais por consciência coletiva."
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
     <!-- 1. MAQUETE 3D DO PROJETO EM FUNCIONAMENTO                -->
     <!-- ======================================================== -->
     <section id="secao-3d" class="section-card">
       <div class="section-header">
         <div>
-          <span class="section-badge">Item 1</span>
+          <span class="section-badge">Protótipo Maker</span>
           <h2 class="section-title">🕹️ Maquete 3D do Projeto em Funcionamento</h2>
           <p class="section-desc">
-            Explore o circuito tridimensional com o ESP32, o módulo microfone MAX4466 e os 3 LEDs de 10mm. Use os botões abaixo para testar cenários, falar no microfone real ou revelar as fiações da montagem!
+            Visualização 3D do nosso protótipo real: gabinete em <strong>Papelão Kraft / MDF cortado a laser</strong>, difusores esféricos feitos com <strong>meias bolinhas de ping-pong</strong>, módulo microfone analógico <strong>MAX4466</strong> e microcontrolador <strong>ESP32</strong>.
           </p>
         </div>
       </div>
@@ -89,21 +142,21 @@
         <!-- Visualizador Three.js -->
         <div class="viewport-3d-wrapper" id="canvas-3d-box">
           <div class="viewport-overlay">
-            <div class="overlay-status status-green" id="status-badge">🟢 Silêncio (Ambiente Calmo)</div>
-            <div style="font-size: 0.78rem; color: #a1a1aa; max-width: 320px; line-height: 1.4;" id="status-desc">
-              Volume ideal para estudo e concentração. Apenas o LED verde aceso.
+            <div class="overlay-status status-green" id="status-badge">🟢 Silêncio (Conforto Acústico)</div>
+            <div style="font-size: 0.8rem; color: #526358; max-width: 320px; line-height: 1.45;" id="status-desc">
+              Volume calmo e seguro (&lt; 60 dB). Ideal para concentração, leitura e bem-estar sensorial.
             </div>
           </div>
           <div class="viewport-hints">
-            🖱️ Clique e arraste para girar a maquete 3D | Scroll para zoom
+            🖱️ Arraste para girar a maquete 3D &bull; Scroll para zoom
           </div>
         </div>
 
         <!-- Painel de Controle da Maquete -->
         <div class="control-panel">
-          <!-- Botão Toggle de Revelar Fiações -->
+          <!-- Toggle de Fiações -->
           <div class="control-group">
-            <label class="control-label">Montagem Física:</label>
+            <label class="control-label">Fiação e Montagem:</label>
             <button class="btn-wires active" id="btn-toggle-wires">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -117,15 +170,15 @@
           <!-- Controle de Ruído Manual -->
           <div class="control-group">
             <div class="control-label">
-              <span>Nível de Ruído no Ambiente:</span>
-              <span class="control-value" id="noise-val">5</span>
+              <span>Nível de Som Estimado:</span>
+              <span class="control-value" id="noise-val">5 dB</span>
             </div>
             <input type="range" id="noise-slider" min="0" max="70" value="5">
           </div>
 
           <!-- Cenários da Sala de Aula -->
           <div class="control-group">
-            <label class="control-label">Simular Cenários Escolares:</label>
+            <label class="control-label">Simular Situações em Sala:</label>
             <div class="preset-buttons">
               <button class="btn-preset active" data-value="5">
                 <span>🤫 Prova / Concentração</span>
@@ -152,9 +205,62 @@
               </svg>
               <span>🎙️ Testar com Minha Voz (Microfone Real)</span>
             </button>
-            <p style="font-size: 0.72rem; color: #71717a; text-align: center;">
+            <p style="font-size: 0.75rem; color: #7C8D81; text-align: center;">
               Fale ou bata palmas na frente da tela para testar o semáforo ao vivo!
             </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- NOVA SEÇÃO B: POR DEBAIXO DO CAPÔ (JORNADA DA ONDA)      -->
+    <!-- ======================================================== -->
+    <section id="secao-jornada" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Física &amp; Engenharia</span>
+          <h2 class="section-title">🌊 Por Debaixo do Capô: A Jornada da Onda Sonora</h2>
+          <p class="section-desc">
+            Como uma voz humana invisível no ar se transforma em uma luz acesa na protoboard? Veja o passo a passo científico e computacional:
+          </p>
+        </div>
+      </div>
+
+      <div class="journey-grid">
+        <!-- Passo 1 -->
+        <div class="journey-step">
+          <div class="journey-badge">Passo 1 &bull; A Física</div>
+          <h3>Vibração no Ar</h3>
+          <p>
+            Quando conversamos, nossas cordas vocais fazem as moléculas de ar se comprimirem e se expandirem em ondas esféricas de pressão acústica invisíveis, viajando a cerca de 340 metros por segundo pela sala de aula.
+          </p>
+          <div class="journey-formula">
+            Onda Mecânica &rarr; Pressão ($\Delta P$)
+          </div>
+        </div>
+
+        <!-- Passo 2 -->
+        <div class="journey-step">
+          <div class="journey-badge">Passo 2 &bull; O Transdutor</div>
+          <h3>Módulo MAX4466</h3>
+          <p>
+            A membrana do microfone de eletreto vibra com a pressão do ar. O circuito pré-amplificador do MAX4466 transforma esse movimento mecânico em uma tensão elétrica contínua que oscila suavemente entre 0V e 3.3V (com centro em 1.65V).
+          </p>
+          <div class="journey-formula">
+            Transdução: Sinal Analógico (0 a 3.3V)
+          </div>
+        </div>
+
+        <!-- Passo 3 -->
+        <div class="journey-step">
+          <div class="journey-badge">Passo 3 &bull; A Matemática</div>
+          <h3>Janela de 50ms no ESP32</h3>
+          <p>
+            Como as ondas sonoras vibram centenas de vezes por segundo, o conversor ADC do ESP32 (GPIO 4) tira milhares de "fotos" por segundo. Em uma janela de 50ms, ele calcula a amplitude Pico a Pico ($V_{\text{máx}} - V_{\text{mín}}$) e aciona os pinos digitais dos LEDs.
+          </p>
+          <div class="journey-formula">
+            $\text{Amplitude} = \text{Pico Máx} - \text{Pico Mín}$
           </div>
         </div>
       </div>
@@ -166,15 +272,14 @@
     <section id="secao-montagem" class="section-card">
       <div class="section-header">
         <div>
-          <span class="section-badge">Item 2</span>
+          <span class="section-badge">Bancada Maker</span>
           <h2 class="section-title">🔌 Esquema de Fiações &amp; Montagem Física</h2>
           <p class="section-desc">
-            Para caber em protoboards comuns, o ESP32 foi montado utilizando <strong>apenas a fileira do pino 3V3</strong>. Veja a rota de cada cabo jumper e a função de cada componente:
+            Para caber com perfeição em protoboards comuns de feira escolar, concentramos <strong>100% das conexões no lado do pino 3V3 do ESP32</strong>. Veja a rota de cada cabo jumper:
           </p>
         </div>
       </div>
 
-      <!-- Cartões das Conexões Físicas -->
       <div class="wiring-grid">
         <!-- VCC -->
         <div class="wiring-card">
@@ -188,7 +293,7 @@
             <span>VCC (MAX4466)</span>
           </div>
           <p class="wiring-desc">
-            Fornece 3.3V regulados com baixo ruído de chaveamento, garantindo leituras estáveis de áudio no conversor ADC.
+            Fornece 3.3V com baixo ruído elétrico, garantindo leituras analógicas precisas para o microfone.
           </p>
         </div>
 
@@ -204,7 +309,7 @@
             <span>Barramento Azul (-)</span>
           </div>
           <p class="wiring-desc">
-            Fecha o circuito elétrico interligando o negativo do módulo de som e os 3 cátodos (pernas curtas) dos LEDs.
+            Fecha o circuito elétrico comum interligando o terra do microfone e os 3 cátodos (pernas curtas) dos LEDs.
           </p>
         </div>
 
@@ -220,14 +325,14 @@
             <span>Pino D4 (GPIO 4)</span>
           </div>
           <p class="wiring-desc">
-            Envia as ondas acústicas em tempo real para a entrada analógica ADC2 do microprocessador do ESP32.
+            Envia o sinal acústico em tempo real para a entrada analógica ADC2 do microprocessador do ESP32.
           </p>
         </div>
 
         <!-- LED Verde -->
         <div class="wiring-card">
           <div class="wiring-card-header">
-            <span class="wiring-card-title">🟢 LED 10mm Verde (Silêncio)</span>
+            <span class="wiring-card-title">🟢 LED Verde (Silêncio)</span>
             <span class="wire-tag wire-tag-green">Fio Verde</span>
           </div>
           <div class="wiring-pin-route">
@@ -236,14 +341,14 @@
             <span>Resistor 220Ω &rarr; LED</span>
           </div>
           <p class="wiring-desc">
-            Sinaliza ambiente silencioso e concentração. O resistor limita a corrente elétrica em ~6mA para proteger o LED.
+            Sinaliza ambiente tranquilo. O resistor de 220Ω protege o pino do ESP32 e mantém a corrente em ~6mA.
           </p>
         </div>
 
         <!-- LED Amarelo -->
         <div class="wiring-card">
           <div class="wiring-card-header">
-            <span class="wiring-card-title">🟡 LED 10mm Amarelo (Atenção)</span>
+            <span class="wiring-card-title">🟡 LED Amarelo (Atenção)</span>
             <span class="wire-tag wire-tag-yellow">Fio Amarelo</span>
           </div>
           <div class="wiring-pin-route">
@@ -252,14 +357,14 @@
             <span>Resistor 220Ω &rarr; LED</span>
           </div>
           <p class="wiring-desc">
-            Indica conversas moderadas na sala. Alerta visual suave antes de o barulho se tornar excessivo.
+            Alerta visual suave para conversas em grupo, avisando a turma antes que o volume suba demais.
           </p>
         </div>
 
         <!-- LED Vermelho -->
         <div class="wiring-card">
           <div class="wiring-card-header">
-            <span class="wiring-card-title">🔴 LED 10mm Vermelho (Alerta)</span>
+            <span class="wiring-card-title">🔴 LED Vermelho (Alerta)</span>
             <span class="wire-tag wire-tag-purple">Fio Roxo</span>
           </div>
           <div class="wiring-pin-route">
@@ -268,16 +373,15 @@
             <span>Resistor 220Ω &rarr; LED</span>
           </div>
           <p class="wiring-desc">
-            Acionado quando o som atinge o limiar crítico. Pisca em modo de alerta estroboscópico com retenção de 1,5s.
+            Acionado quando o som atinge o limiar crítico. Pisca em alerta estroboscópico com retenção de 1,5s.
           </p>
         </div>
       </div>
 
-      <!-- Caixa de Conceito da Lei de Ohm -->
-      <div class="concept-box" style="margin-top: 1.5rem;">
-        <h4>💡 Por que usamos resistores de 220Ω nos LEDs de 10mm? (Lei de Ohm)</h4>
+      <div class="concept-box">
+        <h4>💡 A Lei de Ohm Explicada para o 6º Ano</h4>
         <p>
-          O ESP32 envia <strong>3.3 Volts</strong> em cada pino digital. Como o LED precisa de apenas cerca de <strong>2.0 Volts</strong>, o resistor de 220Ω absorve o excesso de voltagem e limita a corrente em um valor seguro ($I = V/R \approx 6\text{ a }10\text{ mA}$). Sem o resistor, o LED queimaria em frações de segundo!
+          O ESP32 fornece <strong>3.3 Volts</strong>, mas cada LED precisa de apenas cerca de <strong>2.0 Volts</strong>. Se ligássemos o LED direto, a corrente elétrica seria tão alta que queimaria o componente em frações de segundo. O resistor de <strong>220 Ohms</strong> funciona como um redutor de velocidade, mantendo a corrente segura em aproximadamente 6 miliamperes ($I = V / R$).
         </p>
       </div>
     </section>
@@ -288,10 +392,10 @@
     <section id="secao-codigo" class="section-card">
       <div class="section-header">
         <div>
-          <span class="section-badge">Item 3</span>
-          <h2 class="section-title">💻 Visualização do Código do ESP32</h2>
+          <span class="section-badge">Pensamento Computacional</span>
+          <h2 class="section-title">💻 O Código do ESP32 Passo a Passo</h2>
           <p class="section-desc">
-            Navegue pelos blocos essenciais do firmware em C++ / Arduino. Veja como o ESP32 lê o sinal analógico, toma decisões e controla os LEDs:
+            Veja os trechos fundamentais programados em C++ / Arduino para fazer o semáforo funcionar com estabilidade e inteligência:
           </p>
         </div>
       </div>
@@ -312,7 +416,7 @@
         </button>
       </div>
 
-      <!-- Visualizador de Código Moderno -->
+      <!-- Visualizador de Código -->
       <div class="code-viewer-container">
         <div class="code-viewer-header">
           <div class="window-dots">
@@ -354,86 +458,31 @@ void loop() {
         <div class="code-explanation">
           <h5>💡 Explicação Didática</h5>
           <p id="code-explanation-text">
-            Este é o firmware completo gravado no ESP32. Ele configura o conversor analógico-digital (ADC) para ler o microfone analógico MAX4466 no pino D4 e controla as saídas digitais D18, D19 e D21 para acionar os LEDs de 10mm.
+            Este é o firmware completo gravado no ESP32. Ele configura o conversor analógico-digital (ADC) para ler o microfone analógico MAX4466 no pino D4 e controla as saídas digitais D18, D19 e D21 para acionar os LEDs difusores de 10mm.
           </p>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Rodapé -->
+  <!-- Rodapé Oficial da Feira -->
   <footer>
     <div class="footer-content">
-      <div class="badge-tag-footer">Feira de Ciências &amp; Robótica &bull; 6º Ano do Ensino Fundamental</div>
-      <p>
-        <strong>NoiseLight — O Semáforo do Barulho</strong> | Desenvolvido por Luis Felipe Patrocínio e alunos do 6º Ano.
+      <div class="badge-tag-footer">Feira de Robótica &bull; 6º Ano A</div>
+      <p class="footer-official-text">
+        Desenvolvido pelos alunos do 6º Ano A (Projeto InovaCEV) | Orientação: Prof. Luis Felipe Patrocinio (<a href="https://patrodev.com" target="_blank" rel="noopener noreferrer" class="footer-link">patrodev.com</a>)
       </p>
-      <p style="font-size: 0.8rem; color: #71717a;">
-        Integrando eletrônica, programação em C++, acústica e cidadania para uma convivência escolar nota 10!
+      <p class="footer-sub">
+        Unindo robótica educacional, pensamento computacional e empatia social para transformar a convivência escolar em um espaço seguro e acolhedor para todas as mentes.
       </p>
     </div>
   </footer>
-
-  <!-- Canvas Dinâmico de Fundo -->
-  <script>
-    (function () {
-      const canvas = document.getElementById('bg-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      let width = 0;
-      let height = 0;
-      let dpr = 1;
-
-      const orbs = [
-        { angle: 0, speed: 0.0005, baseR: 440, color: 'rgba(255, 85, 0, 0.10)' },
-        { angle: 2.2, speed: -0.0006, baseR: 380, color: 'rgba(56, 189, 248, 0.08)' }
-      ];
-
-      function resize() {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-        ctx.scale(dpr, dpr);
-      }
-
-      window.addEventListener('resize', resize);
-      resize();
-
-      function render(time) {
-        ctx.fillStyle = '#0a0a0f';
-        ctx.fillRect(0, 0, width, height);
-
-        orbs.forEach((orb, i) => {
-          orb.angle += orb.speed;
-          const orbitX = width * 0.5 + Math.cos(orb.angle) * (width * 0.2);
-          const orbitY = height * 0.4 + Math.sin(orb.angle) * (height * 0.15);
-          const currentR = orb.baseR + Math.sin(time * 0.001 + i) * 60;
-
-          const grad = ctx.createRadialGradient(orbitX, orbitY, 0, orbitX, orbitY, Math.max(10, currentR));
-          grad.addColorStop(0, orb.color);
-          grad.addColorStop(1, 'rgba(10, 10, 15, 0)');
-
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.arc(orbitX, orbitY, currentR, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        requestAnimationFrame(render);
-      }
-      requestAnimationFrame(render);
-    })();
-  </script>
 
   <!-- Bibliotecas Three.js e OrbitControls via CDN confiável -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-  <!-- Scripts da Aplicação -->
-  <script src="simulator3d.js"></script>
-  <script src="app.js"></script>
+  <!-- Lógica Interativa Unificada (Sensory Calm / Three.js / Web Audio API) -->
+  <script src="script.js"></script>
 </body>
 </html>
