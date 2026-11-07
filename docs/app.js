@@ -1,15 +1,14 @@
 /**
- * app.js — Controlador Principal da Página de Apresentação
- * Projeto: NoiseLight (Semáforo do Barulho)
+ * app.js — Controlador Principal da Apresentação NoiseLight
+ * Projeto para a Feira de Ciências e Robótica do 6º Ano
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Inicializar os Simuladores
+  // 1. Inicializa o visualizador 3D
   const sim3d = new NoiseLight3D('canvas-3d-box');
-  const circuit = new CircuitSimulator('canvas-circuit');
 
-  // Estado Atual
-  let currentNoise = 0;
+  // Estado da aplicação
+  let currentNoise = 5;
   let isListeningMic = false;
   let audioContext = null;
   let analyser = null;
@@ -21,19 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusBadge = document.getElementById('status-badge');
   const statusDesc = document.getElementById('status-desc');
   const btnMic = document.getElementById('btn-mic');
+  const btnToggleWires = document.getElementById('btn-toggle-wires');
   const presetBtns = document.querySelectorAll('.btn-preset');
 
-  // Circuit LED buttons
-  const ledPickBtns = document.querySelectorAll('.led-pick-btn');
-
-  // Code Explorer buttons & code block
-  const codeNavBtns = document.querySelectorAll('.code-nav-btn');
+  // Abas do visualizador de código
+  const codeTabs = document.querySelectorAll('.code-tab-btn');
   const codeDisplay = document.getElementById('code-display');
   const codeExplanation = document.getElementById('code-explanation-text');
+  const btnCopyCode = document.getElementById('btn-copy-code');
 
-  // 2. Atualização de Ruído
+  // 2. Função de Atualização do Nível de Ruído
   function updateNoiseLevel(value, source = 'slider') {
     currentNoise = parseInt(value, 10);
+    if (isNaN(currentNoise)) currentNoise = 0;
+
     if (source !== 'slider' && slider) {
       slider.value = currentNoise;
     }
@@ -41,53 +41,36 @@ document.addEventListener('DOMContentLoaded', () => {
       noiseValueDisplay.innerText = currentNoise;
     }
 
-    // Atualiza simulador 3D
-    sim3d.setNoiseCount(currentNoise);
+    // Atualiza o simulador 3D (LEDs e luzes)
+    if (sim3d) {
+      sim3d.setNoiseCount(currentNoise);
+    }
 
-    // Atualiza badges e textos explicativos
-    if (currentNoise < 2) {
-      statusBadge.innerHTML = '🟢 Silêncio (Ideal)';
-      statusBadge.style.borderColor = '#10b981';
-      statusBadge.style.color = '#10b981';
-      statusDesc.innerText = 'Abaixo de 2 disparos/s: Sala tranquila, ambiente propício para estudo e concentração.';
-      circuit.setLed('green');
-      highlightCircuitButton('green');
-    } else if (currentNoise >= 2 && currentNoise < 15) {
-      statusBadge.innerHTML = '🟡 Atenção (Murmúrios)';
-      statusBadge.style.borderColor = '#f59e0b';
-      statusBadge.style.color = '#f59e0b';
-      statusDesc.innerText = 'Entre 2 e 14 disparos/s: Falatório leve ou trabalho em grupo. Fique atento para não aumentar!';
-      circuit.setLed('yellow');
-      highlightCircuitButton('yellow');
+    // Atualiza badges visuais de status
+    if (currentNoise < 15) {
+      statusBadge.innerHTML = '🟢 Silêncio (Ambiente Calmo)';
+      statusBadge.className = 'overlay-status status-green';
+      statusDesc.innerText = 'Volume ideal para estudo e concentração (< 900 de amplitude). Apenas o LED verde aceso.';
+    } else if (currentNoise >= 15 && currentNoise < 48) {
+      statusBadge.innerHTML = '🟡 Atenção (Conversas)';
+      statusBadge.className = 'overlay-status status-yellow';
+      statusDesc.innerText = 'Trabalho em grupo ou murmúrios (900 a 2200). Ponto de atenção para não subir mais!';
     } else {
-      statusBadge.innerHTML = '🔴 Alerta (Barulho Excessivo)';
-      statusBadge.style.borderColor = '#ef4444';
-      statusBadge.style.color = '#ef4444';
-      statusDesc.innerText = '15 ou mais disparos/s: Volume acima do permitido! LED vermelho piscando em sinal de alerta.';
-      circuit.setLed('red_blink');
-      highlightCircuitButton('red');
+      statusBadge.innerHTML = '🔴 Alerta (Barulho Excessivo!)';
+      statusBadge.className = 'overlay-status status-red';
+      statusDesc.innerText = 'Volume alto ou gritaria (> 2200). O LED vermelho pisca em alerta estroboscópico!';
     }
   }
 
-  function highlightCircuitButton(color) {
-    ledPickBtns.forEach(btn => {
-      btn.classList.remove('active-green', 'active-yellow', 'active-red');
-      if (btn.dataset.led === color) {
-        btn.classList.add(`active-${color}`);
-      }
-    });
-  }
-
-  // 3. Eventos do Slider
+  // 3. Evento do Slider de Ruído
   if (slider) {
     slider.addEventListener('input', (e) => {
-      // Remove estado ativo dos botões preset se usuário mexer no slider
       presetBtns.forEach(b => b.classList.remove('active'));
       updateNoiseLevel(e.target.value, 'slider');
     });
   }
 
-  // 4. Presets (Silêncio, Conversa, Gritos)
+  // 4. Botões de Cenários Escolares (Presets)
   presetBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       presetBtns.forEach(b => b.classList.remove('active'));
@@ -97,16 +80,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 5. Botões do Painel de Corrente Elétrica
-  ledPickBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const ledColor = btn.dataset.led;
-      highlightCircuitButton(ledColor);
-      circuit.setLed(ledColor);
+  // 5. Botão de Revelar / Ocultar Fiações 3D
+  if (btnToggleWires) {
+    btnToggleWires.addEventListener('click', () => {
+      if (!sim3d) return;
+      const isVisible = sim3d.toggleWires();
+      if (isVisible) {
+        btnToggleWires.classList.add('active');
+        btnToggleWires.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          <span>Fiações: Visíveis (Clique para Ocultar)</span>
+        `;
+      } else {
+        btnToggleWires.classList.remove('active');
+        btnToggleWires.innerHTML = `
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <span>🔌 Revelar Fiações da Montagem</span>
+        `;
+      }
     });
-  });
+  }
 
-  // 6. Teste de Microfone Real (Web Audio API)
+  // 6. Teste com Microfone Real (Web Audio API)
   if (btnMic) {
     btnMic.addEventListener('click', async () => {
       if (!isListeningMic) {
@@ -136,13 +138,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (micStream) {
       micStream.getTracks().forEach(track => track.stop());
     }
-    if (audioContext) {
+    if (audioContext && audioContext.state !== 'closed') {
       audioContext.close();
     }
     isListeningMic = false;
     if (btnMic) {
       btnMic.classList.remove('listening');
-      btnMic.innerHTML = '🎙️ Testar com Microfone Real';
+      btnMic.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+          <line x1="12" y1="19" x2="12" y2="22"></line>
+        </svg>
+        <span>🎙️ Testar com Minha Voz (Microfone Real)</span>
+      `;
     }
   }
 
@@ -152,100 +161,148 @@ document.addEventListener('DOMContentLoaded', () => {
     const dataArray = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(dataArray);
 
-    // Calcula a intensidade média do som captado
     let sum = 0;
     for (let i = 0; i < dataArray.length; i++) {
       sum += dataArray[i];
     }
     const average = sum / dataArray.length;
 
-    // Converte o volume médio (0 a 128) para estimativa de disparos sonoros (0 a 30)
-    let simulatedShots = 0;
-    if (average > 10) {
-      simulatedShots = Math.min(30, Math.floor((average - 10) * 0.7));
+    // Converte o volume médio para a escala da maquete (0 a 70)
+    let simulatedNoise = 0;
+    if (average > 8) {
+      simulatedNoise = Math.min(70, Math.floor((average - 8) * 1.4));
     }
 
-    updateNoiseLevel(simulatedShots, 'mic');
-
+    updateNoiseLevel(simulatedNoise, 'mic');
     requestAnimationFrame(listenAudioLoop);
   }
 
-  // 7. Navegação Interativa do Código-Fonte
-  const codeSnippets = {
-    setup: {
-      code: `<span class="hl-com">// 1. Função executada uma única vez ao ligar o ESP32</span>
-<span class="hl-type">void</span> <span class="hl-func">setup</span>() {
-  <span class="hl-func">Serial</span>.<span class="hl-func">begin</span>(<span class="hl-num">115200</span>); <span class="hl-com">// Comunicação com o computador</span>
+  // 7. Navegação e Conteúdo das Abas de Código
+  const codeDatabase = {
+    complete: {
+      code: `// --- CÓDIGO COMPLETO DO FIRMWARE (src/main.cpp) ---
+#include &lt;Arduino.h&gt;
 
-  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_SENSOR_SOM, <span class="hl-kw">INPUT</span>);  <span class="hl-com">// Sensor de som envia dados para o ESP32</span></span>
-  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_VERDE, <span class="hl-kw">OUTPUT</span>);   <span class="hl-com">// Pino envia corrente para o LED Verde</span></span>
-  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_AMARELO, <span class="hl-kw">OUTPUT</span>); <span class="hl-com">// Pino envia corrente para o LED Amarelo</span></span>
-  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_VERMELHO, <span class="hl-kw">OUTPUT</span>);<span class="hl-com">// Pino envia corrente para o LED Vermelho</span></span>
+const int PINO_SENSOR_SOM   = 4;  // OUT do MAX4466 (Entrada Analógica D4)
+const int PINO_LED_VERDE     = 18; // LED 10mm Verde (D18)
+const int PINO_LED_AMARELO   = 19; // LED 10mm Amarelo (D19)
+const int PINO_LED_VERMELHO  = 21; // LED 10mm Vermelho (D21)
+
+int limiarAmarelo  = 900;  // Acima deste valor passa para Amarelo
+int limiarVermelho = 2200; // Acima deste valor passa para Vermelho
+
+void setup() {
+  Serial.begin(115200);
+  analogReadResolution(12); // ADC do ESP32: 0 a 4095
+  analogSetPinAttenuation(PINO_SENSOR_SOM, ADC_11db);
+
+  pinMode(PINO_LED_VERDE, OUTPUT);
+  pinMode(PINO_LED_AMARELO, OUTPUT);
+  pinMode(PINO_LED_VERMELHO, OUTPUT);
+}
+
+void loop() {
+  // Amostragem Pico-a-Pico durante 50ms
+  int amplitude = medirAmplitudePicoAPico(50);
+  atualizarSemaforo(amplitude);
 }`,
-      explanation: 'No <code>setup()</code>, definimos o papel de cada pino. O pino do microfone é configurado como <strong>INPUT</strong> (entrada de dados auditivos) e os pinos dos LEDs são configurados como <strong>OUTPUT</strong> (saídas capazes de fornecer 3.3V para acender os componentes).'
+      explanation: 'Este é o firmware completo gravado no ESP32. Ele configura o conversor analógico-digital (ADC) para ler o microfone analógico MAX4466 no pino D4 e controla as saídas digitais D18, D19 e D21 para acionar os LEDs de 10mm.'
     },
-    sampling: {
-      code: `<span class="hl-com">// 2. Amostragem temporal de 1 segundo (1000 milissegundos)</span>
-<span class="hl-type">int</span> contadorDeRuido = <span class="hl-num">0</span>;
-<span class="hl-type">unsigned long</span> tempoInicio = <span class="hl-func">millis</span>();
 
-<span class="hl-target"><span class="hl-kw">while</span> (<span class="hl-func">millis</span>() - tempoInicio &lt; <span class="hl-num">1000</span>) {</span>
-  <span class="hl-com">// O microprocessador fica atento a cada pulso do microfone</span>
-  <span class="hl-kw">if</span> (<span class="hl-func">digitalRead</span>(PINO_SENSOR_SOM) == <span class="hl-kw">HIGH</span>) {
-    contadorDeRuido++;
-    <span class="hl-func">delay</span>(<span class="hl-num">5</span>); <span class="hl-com">// Pausa anti-eco de 5 milissegundos</span>
+    sampling: {
+      code: `// --- LEITURA DO MAX4466 (PICO-A-PICO) ---
+int medirAmplitudePicoAPico(unsigned long duracaoMs) {
+  unsigned long tempoInicio = millis();
+  int valorMin = 4095;
+  int valorMax = 0;
+
+  // Lê a onda de som continuamente por 50 milissegundos
+  while (millis() - tempoInicio &lt; duracaoMs) {
+    int leitura = analogRead(PINO_SENSOR_SOM);
+    if (leitura &gt; valorMax) valorMax = leitura;
+    if (leitura &lt; valorMin) valorMin = leitura;
+  }
+
+  // Amplitude = diferença entre a crista mais alta e o vale mais baixo
+  return (valorMax - valorMin);
+}`,
+      explanation: 'O módulo MAX4466 entrega uma onda analógica contínua. Durante 50ms, o ESP32 mede repetidamente a onda e calcula a amplitude Pico a Pico (Valor Máximo - Valor Mínimo). Em silêncio, a amplitude é muito baixa (~100). Ao falar ou gritar, a onda oscila com força e a amplitude passa de 2000!'
+    },
+
+    decision: {
+      code: `// --- LÓGICA DE DECISÃO DO SEMÁFORO ---
+void atualizarSemaforo(int amplitude) {
+  unsigned long agora = millis();
+
+  // Se atingiu o nível crítico, ativa a retenção temporária
+  if (amplitude &gt;= limiarVermelho) {
+    ultimoTempoVermelho = agora;
+  }
+
+  // Mantém no vermelho por 1,5s para não oscilar a cada pausa de voz
+  if (agora - ultimoTempoVermelho &lt; 1500) {
+    alertarVermelhoPiscando();
+  } 
+  else if (amplitude &gt;= limiarAmarelo) {
+    acenderSomenteAmarelo();
+  } 
+  else {
+    acenderSomenteVerde();
   }
 }`,
-      explanation: 'Usamos a função <code>millis()</code> como um cronômetro digital interno. Durante exatamente 1000 milissegundos (1 segundo), o ESP32 realiza leituras contínuas do sensor de som e acumula na variável <code>contadorDeRuido</code>.'
+      explanation: 'Aqui o ESP32 atua como o "cérebro" do semáforo. Usando condicionais (if / else if / else), ele compara a amplitude com os limiares. Um recurso essencial é o "Peak Hold" de 1,5 segundo: se alguém grita, o vermelho permanece ativo por um momento para garantir que todos na sala vejam o alerta.'
     },
-    debounce: {
-      code: `<span class="hl-com">// 3. Detecção e Filtro Anti-Repique (Debounce)</span>
-<span class="hl-target"><span class="hl-kw">if</span> (<span class="hl-func">digitalRead</span>(PINO_SENSOR_SOM) == <span class="hl-kw">HIGH</span>) {</span>
-  contadorDeRuido++;  <span class="hl-com">// Registra uma onda de barulho</span>
-  <span class="hl-target"><span class="hl-func">delay</span>(<span class="hl-num">5</span>);           <span class="hl-com">// Aguarda o eco acústico se dissipar</span></span>
+
+    nonblocking: {
+      code: `// --- ALERTA PISCANTE NÃO-BLOQUEANTE ---
+void alertarVermelhoPiscando() {
+  digitalWrite(PINO_LED_VERDE, LOW);
+  digitalWrite(PINO_LED_AMARELO, LOW);
+
+  // Pisca o LED Vermelho a cada 120ms sem usar delay()
+  unsigned long agora = millis();
+  if (agora - ultimoPiscaVermelho &gt;= 120) {
+    ultimoPiscaVermelho = agora;
+    estadoPiscaVermelho = !estadoPiscaVermelho;
+    digitalWrite(PINO_LED_VERMELHO, estadoPiscaVermelho ? HIGH : LOW);
+  }
 }`,
-      explanation: 'Uma palma ou fala não é um som instantâneo; o som vibra o ar várias vezes em milissegundos. Sem o <code>delay(5)</code>, uma única batida de palma seria contada centenas de vezes. O atraso atua como um "filtro anti-eco" essencial em projetos de sensores.'
-    },
-    decision: {
-      code: `<span class="hl-com">// 4. Tomada de Decisão Pedagógica (Lógica do Semáforo)</span>
-<span class="hl-target"><span class="hl-kw">if</span> (disparos &lt; <span class="hl-num">2</span>) {</span>
-  <span class="hl-func">acenderSomenteVerde</span>();    <span class="hl-com">// Ambiente calmo e focado</span>
-<span class="hl-target">} <span class="hl-kw">else if</span> (disparos &gt;= <span class="hl-num">2</span> &amp;&amp; disparos &lt; <span class="hl-num">15</span>) {</span>
-  <span class="hl-func">acenderSomenteAmarelo</span>();  <span class="hl-com">// Conversas moderadas (Atenção)</span>
-<span class="hl-target">} <span class="hl-kw">else</span> {</span>
-  <span class="hl-func">alertarVermelhoPiscando</span>();<span class="hl-com">// Excesso de barulho (Alerta)</span>
-}`,
-      explanation: 'Demonstra a aplicação prática do <strong>Pensamento Computacional</strong> com estruturas condicionais <code>if-else</code>. O microcontrolador compara a quantidade de disparos com os limiares pré-calibrados e aciona a função luminosa correspondente.'
-    },
-    blink: {
-      code: `<span class="hl-com">// 5. Efeito Estroboscópico de Alerta do LED Vermelho</span>
-<span class="hl-type">void</span> <span class="hl-func">alertarVermelhoPiscando</span>() {
-  <span class="hl-func">digitalWrite</span>(PINO_LED_VERDE, <span class="hl-kw">LOW</span>);
-  <span class="hl-func">digitalWrite</span>(PINO_LED_AMARELO, <span class="hl-kw">LOW</span>);
-  
-  <span class="hl-target"><span class="hl-func">digitalWrite</span>(PINO_LED_VERMELHO, <span class="hl-kw">HIGH</span>); <span class="hl-com">// Liga o LED (3.3V)</span></span>
-  <span class="hl-func">delay</span>(<span class="hl-num">100</span>);
-  <span class="hl-target"><span class="hl-func">digitalWrite</span>(PINO_LED_VERMELHO, <span class="hl-kw">LOW</span>);  <span class="hl-com">// Desliga o LED (0V)</span></span>
-  <span class="hl-func">delay</span>(<span class="hl-num">100</span>);
-}`,
-      explanation: 'Alternar rapidamente a tensão no pino entre 3.3V (HIGH) e 0V (LOW) com intervalos de 100 milissegundos cria o efeito de semáforo piscante, chamando a atenção visual imediata dos estudantes na sala de aula.'
+      explanation: 'Para piscar o LED vermelho de forma rápida e estroboscópica sem travar o ESP32, usamos a função millis() em vez de delay(). Isso permite que o microcontrolador continue medindo o som do microfone em segundo plano sem qualquer interrupção!'
     }
   };
 
-  codeNavBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      codeNavBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+  codeTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      codeTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
 
-      const sectionKey = btn.dataset.section;
-      const data = codeSnippets[sectionKey];
-      if (data) {
-        codeDisplay.innerHTML = data.code;
-        codeExplanation.innerHTML = data.explanation;
+      const snippetKey = tab.dataset.snippet;
+      const snippet = codeDatabase[snippetKey];
+      if (snippet) {
+        codeDisplay.innerHTML = snippet.code;
+        codeExplanation.innerHTML = snippet.explanation;
       }
     });
   });
 
-  // Inicialização padrão: Nível de silêncio (Verde)
-  updateNoiseLevel(0, 'init');
+  // 8. Botão Copiar Código
+  if (btnCopyCode) {
+    btnCopyCode.addEventListener('click', () => {
+      const tempElement = document.createElement('textarea');
+      tempElement.value = codeDisplay.innerText;
+      document.body.appendChild(tempElement);
+      tempElement.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempElement);
+
+      const originalText = btnCopyCode.innerHTML;
+      btnCopyCode.innerHTML = '✅ Código Copiado!';
+      setTimeout(() => {
+        btnCopyCode.innerHTML = originalText;
+      }, 2000);
+    });
+  }
+
+  // Inicializa o som padrão (calmo)
+  updateNoiseLevel(5, 'init');
 });

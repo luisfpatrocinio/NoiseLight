@@ -1082,3 +1082,174 @@ footer {
     min-height: 480px;
   }
 }
+
+
+/* ==========================================================================
+   MELHORIAS DE APRESENTAÇÃO - FEIRA DE CIÊNCIAS
+   ========================================================================== */
+.btn-wires {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 0.85rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all 0.25s ease;
+  font-family: var(--font-family);
+}
+
+.btn-wires:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-focus);
+}
+
+.btn-wires.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+}
+
+.status-green {
+  border-color: var(--led-green) !important;
+  color: var(--led-green) !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+}
+
+.status-yellow {
+  border-color: var(--led-yellow) !important;
+  color: var(--led-yellow) !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+}
+
+.status-red {
+  border-color: var(--led-red) !important;
+  color: var(--led-red) !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+}
+
+/* Cartões do Esquema de Montagem */
+.wiring-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.wiring-card {
+  background: rgba(16, 16, 20, 0.8);
+  border: 1px solid var(--border-color);
+  padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.25s ease;
+}
+
+.wiring-card:hover {
+  border-color: var(--border-focus);
+  transform: translateY(-2px);
+}
+
+.wiring-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.wiring-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wire-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid var(--border-color);
+}
+
+.wire-tag-red { color: #f87171; border-color: rgba(248, 113, 113, 0.4); background: rgba(239, 68, 68, 0.1); }
+.wire-tag-black { color: #d1d5db; border-color: rgba(156, 163, 175, 0.4); background: rgba(75, 85, 99, 0.2); }
+.wire-tag-orange { color: #fb923c; border-color: rgba(251, 146, 60, 0.4); background: rgba(249, 115, 22, 0.1); }
+.wire-tag-green { color: #4ade80; border-color: rgba(74, 222, 128, 0.4); background: rgba(34, 197, 94, 0.1); }
+.wire-tag-yellow { color: #facc15; border-color: rgba(250, 204, 21, 0.4); background: rgba(234, 179, 8, 0.1); }
+.wire-tag-purple { color: #c084fc; border-color: rgba(192, 132, 252, 0.4); background: rgba(168, 85, 247, 0.1); }
+
+.wiring-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.wiring-pin-route {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 0.5rem 0.75rem;
+  border-left: 2px solid var(--signal-orange);
+  color: #e4e4e7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Barra de Abas do Código */
+.code-tabs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.code-tab-btn {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-family);
+}
+
+.code-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+.code-tab-btn.active {
+  background: var(--signal-orange);
+  color: #ffffff;
+  border-color: var(--signal-orange);
+  font-weight: 600;
+}
+
+.btn-copy-code {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-copy-code:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}

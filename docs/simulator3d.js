@@ -1,6 +1,7 @@
 /**
- * simulator3d.js — Simulação 3D Interativa do Semáforo com Three.js
- * Projeto: NoiseLight (Feira de Robótica do 6º Ano)
+ * simulator3d.js — Maquete 3D Interativa do Semáforo NoiseLight com Three.js
+ * Hardware: ESP32 DevKit V1, Módulo Microfone MAX4466, 3 LEDs de 10mm
+ * Projeto: Feira de Ciências e Robótica - 6º Ano
  */
 
 class NoiseLight3D {
@@ -13,7 +14,7 @@ class NoiseLight3D {
     this.renderer = null;
     this.controls = null;
 
-    // Componentes 3D
+    // Componentes e Grupos 3D
     this.leds = {
       green: null,
       yellow: null,
@@ -24,7 +25,8 @@ class NoiseLight3D {
       yellow: null,
       red: null
     };
-    this.sensorLed = null;
+    this.wiresGroup = null;
+    this.wiresVisible = true;
 
     this.currentNoise = 0;
     this.blinkCounter = 0;
@@ -36,14 +38,14 @@ class NoiseLight3D {
   init() {
     // 1. Cena
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x08080a);
-    this.scene.fog = new THREE.FogExp2(0x08080a, 0.02);
+    this.scene.background = new THREE.Color(0x0a0a0f);
+    this.scene.fog = new THREE.FogExp2(0x0a0a0f, 0.018);
 
     // 2. Câmera
     const width = this.container.clientWidth || 800;
     const height = this.container.clientHeight || 480;
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    this.camera.position.set(0, 22, 32);
+    this.camera.position.set(0, 24, 34);
 
     // 3. Renderer
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -53,33 +55,33 @@ class NoiseLight3D {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.container.appendChild(this.renderer.domElement);
 
-    // 4. Orbit Controls (Arrastar para girar, scroll para zoom)
+    // 4. OrbitControls
     if (typeof THREE.OrbitControls !== 'undefined') {
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
       this.controls.enableDamping = true;
       this.controls.dampingFactor = 0.05;
-      this.controls.maxPolarAngle = Math.PI / 2 - 0.05; // Não passar por baixo do chão
-      this.controls.minDistance = 12;
-      this.controls.maxDistance = 60;
+      this.controls.maxPolarAngle = Math.PI / 2 - 0.04;
+      this.controls.minDistance = 14;
+      this.controls.maxDistance = 65;
       this.controls.target.set(0, 2, 0);
     }
 
-    // 5. Iluminação do Ambiente
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+    // 5. Iluminação
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
     this.scene.add(ambientLight);
 
-    const dirLight = new THREE.DirectionalLight(0xe0f2fe, 1.2);
-    dirLight.position.set(20, 35, 20);
+    const dirLight = new THREE.DirectionalLight(0xf8fafc, 1.1);
+    dirLight.position.set(18, 35, 18);
     dirLight.castShadow = true;
     dirLight.shadow.mapSize.width = 1024;
     dirLight.shadow.mapSize.height = 1024;
     this.scene.add(dirLight);
 
-    const blueRimLight = new THREE.DirectionalLight(0x38bdf8, 0.4);
-    blueRimLight.position.set(-20, 15, -20);
-    this.scene.add(blueRimLight);
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.45);
+    rimLight.position.set(-20, 16, -18);
+    this.scene.add(rimLight);
 
-    // 6. Construir os Modelos 3D
+    // 6. Construir a Maquete
     this.buildScene();
 
     // 7. Eventos de Redimensionamento
@@ -91,31 +93,31 @@ class NoiseLight3D {
   }
 
   buildScene() {
-    // A. Mesa / Plataforma
-    const tableGeo = new THREE.CylinderGeometry(28, 30, 2, 64);
-    const tableMat = new THREE.MeshStandardMaterial({
+    // A. Bancada da Feira de Ciências
+    const benchGeo = new THREE.CylinderGeometry(30, 32, 2, 64);
+    const benchMat = new THREE.MeshStandardMaterial({
       color: 0x0f172a,
-      roughness: 0.8,
-      metalness: 0.2
+      roughness: 0.85,
+      metalness: 0.15
     });
-    const table = new THREE.Mesh(tableGeo, tableMat);
-    table.position.y = -1;
-    table.receiveShadow = true;
-    this.scene.add(table);
+    const bench = new THREE.Mesh(benchGeo, benchMat);
+    bench.position.y = -1;
+    bench.receiveShadow = true;
+    this.scene.add(bench);
 
-    // Grid discreto sobre a bancada
-    const grid = new THREE.GridHelper(40, 40, 0x1e293b, 0x111827);
+    // Grid técnico sutil
+    const grid = new THREE.GridHelper(44, 44, 0x334155, 0x1e293b);
     grid.position.y = 0.02;
     this.scene.add(grid);
 
     // B. Protoboard (Matriz de Contatos)
-    const protoWidth = 22;
-    const protoLength = 16;
+    const protoWidth = 24;
+    const protoLength = 17;
     const protoGeo = new THREE.BoxGeometry(protoWidth, 1.2, protoLength);
     const protoMat = new THREE.MeshStandardMaterial({
-      color: 0xf1f5f9,
-      roughness: 0.4,
-      metalness: 0.1
+      color: 0xf8fafc,
+      roughness: 0.35,
+      metalness: 0.05
     });
     const protoboard = new THREE.Mesh(protoGeo, protoMat);
     protoboard.position.set(0, 0.6, 0);
@@ -123,30 +125,40 @@ class NoiseLight3D {
     protoboard.receiveShadow = true;
     this.scene.add(protoboard);
 
-    // Linhas coloridas da protoboard (alimentação positiva e negativa)
-    const railMatRed = new THREE.MeshBasicMaterial({ color: 0xef4444 });
-    const railMatBlue = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
-    const railGeo = new THREE.BoxGeometry(protoWidth - 2, 0.05, 0.2);
+    // Linha azul (GND / Barramento Negativo)
+    const gndRailGeo = new THREE.BoxGeometry(protoWidth - 2, 0.05, 0.25);
+    const gndRailMat = new THREE.MeshBasicMaterial({ color: 0x2563eb });
+    const gndRail = new THREE.Mesh(gndRailGeo, gndRailMat);
+    gndRail.position.set(0, 1.22, protoLength / 2 - 1.2);
+    this.scene.add(gndRail);
 
-    const rail1 = new THREE.Mesh(railGeo, railMatRed);
-    rail1.position.set(0, 1.23, -protoLength / 2 + 0.8);
-    this.scene.add(rail1);
+    // Linha vermelha (+ / Barramento Positivo)
+    const vccRailMat = new THREE.MeshBasicMaterial({ color: 0xdc2626 });
+    const vccRail = new THREE.Mesh(gndRailGeo, vccRailMat);
+    vccRail.position.set(0, 1.22, protoLength / 2 - 1.7);
+    this.scene.add(vccRail);
 
-    const rail2 = new THREE.Mesh(railGeo, railMatBlue);
-    rail2.position.set(0, 1.23, -protoLength / 2 + 1.4);
-    this.scene.add(rail2);
+    // Vão central divisor da protoboard
+    const grooveGeo = new THREE.BoxGeometry(protoWidth - 2, 0.1, 0.5);
+    const grooveMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8 });
+    const groove = new THREE.Mesh(grooveGeo, grooveMat);
+    groove.position.set(0, 1.2, 0);
+    this.scene.add(groove);
 
-    // C. Módulo ESP32 DevKit V1
-    this.buildEsp32(-4.5, 1.2, 0);
+    // C. ESP32 DevKit V1 (Encaixado na fileira de baixo da protoboard - lado 3V3 ativo)
+    this.buildEsp32(-5.5, 1.2, 3.2);
 
-    // D. Módulo Sensor de Som (com microfone)
-    this.buildSoundSensor(6.5, 1.2, 3);
+    // D. Módulo Microfone MAX4466 (com eletreto e trimpot)
+    this.buildMax4466(6.8, 1.2, 3.2);
 
-    // E. Os 3 LEDs do Semáforo (Verde, Amarelo, Vermelho)
-    this.buildTrafficLeds(4.5, 1.2, -3);
+    // E. 3 LEDs Grandes de 10mm (Verde, Amarelo, Vermelho)
+    this.buildLeds10mm(3.5, 1.2, -4.2);
 
-    // F. Fios Jumpers Coloridos
+    // F. Fiações / Cabos Jumpers (Agrupados para permitir mostrar/ocultar)
     this.buildJumperWires();
+
+    // Inicia com o estado silencioso (Verde)
+    this.setNoiseCount(0);
   }
 
   buildEsp32(x, y, z) {
@@ -154,159 +166,180 @@ class NoiseLight3D {
     espGroup.position.set(x, y, z);
 
     // Placa PCB preta
-    const pcbGeo = new THREE.BoxGeometry(6, 0.4, 11);
-    const pcbMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3 });
+    const pcbGeo = new THREE.BoxGeometry(5.8, 0.35, 11);
+    const pcbMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.4 });
     const pcb = new THREE.Mesh(pcbGeo, pcbMat);
     pcb.castShadow = true;
     espGroup.add(pcb);
 
-    // Blindagem metálica do chip ESP-WROOM-32
-    const shieldGeo = new THREE.BoxGeometry(4.5, 0.5, 5);
+    // Blindagem metálica do chip ESP32 (WROOM)
+    const shieldGeo = new THREE.BoxGeometry(4.4, 0.5, 5.2);
     const shieldMat = new THREE.MeshStandardMaterial({
-      color: 0xd1d5db,
+      color: 0xd4d4d8,
       metalness: 0.85,
-      roughness: 0.2
+      roughness: 0.25
     });
     const shield = new THREE.Mesh(shieldGeo, shieldMat);
-    shield.position.set(0, 0.4, -0.5);
+    shield.position.set(0, 0.4, -0.6);
     shield.castShadow = true;
     espGroup.add(shield);
 
-    // Antena dourada de PCB
-    const antGeo = new THREE.BoxGeometry(4.2, 0.1, 2);
+    // Antena PCB Dourada
+    const antGeo = new THREE.BoxGeometry(4.2, 0.08, 1.8);
     const antMat = new THREE.MeshStandardMaterial({
-      color: 0xd97706,
+      color: 0xb45309,
       metalness: 0.9,
-      roughness: 0.1
+      roughness: 0.2
     });
     const antenna = new THREE.Mesh(antGeo, antMat);
-    antenna.position.set(0, 0.25, -4.2);
+    antenna.position.set(0, 0.22, -4.3);
     espGroup.add(antenna);
 
     // Conector Micro-USB metálico
-    const usbGeo = new THREE.BoxGeometry(2.5, 1.2, 2);
-    const usbMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.9, roughness: 0.2 });
+    const usbGeo = new THREE.BoxGeometry(2.4, 1.1, 2);
+    const usbMat = new THREE.MeshStandardMaterial({ color: 0xa1a1aa, metalness: 0.85, roughness: 0.2 });
     const usb = new THREE.Mesh(usbGeo, usbMat);
-    usb.position.set(0, 0.5, 5.2);
+    usb.position.set(0, 0.45, 5.2);
     espGroup.add(usb);
 
-    // Pinos laterais dourados
-    const pinGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.8, 8);
-    const pinMat = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.9 });
-    for (let i = -4.5; i <= 4.5; i += 0.8) {
+    // LED de Power (Vermelho onboard pequeno)
+    const pwrLedGeo = new THREE.BoxGeometry(0.3, 0.15, 0.3);
+    const pwrLedMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+    const pwrLed = new THREE.Mesh(pwrLedGeo, pwrLedMat);
+    pwrLed.position.set(1.5, 0.26, 4.2);
+    espGroup.add(pwrLed);
+
+    // Pinos laterais na protoboard
+    const pinGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.7, 8);
+    const pinMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9 });
+    for (let i = -4.5; i <= 4.5; i += 0.7) {
+      // Pinos da fileira conectada
       const pinL = new THREE.Mesh(pinGeo, pinMat);
-      pinL.position.set(-2.7, -0.4, i);
+      pinL.position.set(2.6, -0.35, i);
       espGroup.add(pinL);
 
       const pinR = new THREE.Mesh(pinGeo, pinMat);
-      pinR.position.set(2.7, -0.4, i);
+      pinR.position.set(-2.6, -0.35, i);
       espGroup.add(pinR);
     }
 
     this.scene.add(espGroup);
   }
 
-  buildSoundSensor(x, y, z) {
+  buildMax4466(x, y, z) {
     const sensorGroup = new THREE.Group();
     sensorGroup.position.set(x, y, z);
 
-    // PCB azul do sensor
-    const pcbGeo = new THREE.BoxGeometry(4, 0.3, 5);
-    const pcbMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3 });
+    // PCB roxa/azul escura típica do módulo MAX4466
+    const pcbGeo = new THREE.BoxGeometry(3.6, 0.25, 3.8);
+    const pcbMat = new THREE.MeshStandardMaterial({ color: 0x581c87, roughness: 0.4 });
     const pcb = new THREE.Mesh(pcbGeo, pcbMat);
+    pcb.castShadow = true;
     sensorGroup.add(pcb);
 
-    // Cápsula do microfone cilíndrica prateada
-    const micGeo = new THREE.CylinderGeometry(0.9, 0.9, 1.2, 24);
-    const micMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.8, roughness: 0.2 });
+    // Cápsula de microfone de eletreto prateada
+    const micGeo = new THREE.CylinderGeometry(0.95, 0.95, 1.0, 24);
+    const micMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d8, metalness: 0.85, roughness: 0.2 });
     const mic = new THREE.Mesh(micGeo, micMat);
-    mic.position.set(0, 0.7, 1.6);
+    mic.position.set(0, 0.6, 0.6);
     sensorGroup.add(mic);
 
-    // Espuma / topo preto do microfone
-    const micTopGeo = new THREE.CylinderGeometry(0.8, 0.8, 0.1, 24);
-    const micTopMat = new THREE.MeshBasicMaterial({ color: 0x111827 });
+    // Filtro acústico / topo preto do microfone
+    const micTopGeo = new THREE.CylinderGeometry(0.85, 0.85, 0.1, 24);
+    const micTopMat = new THREE.MeshBasicMaterial({ color: 0x18181b });
     const micTop = new THREE.Mesh(micTopGeo, micTopMat);
-    micTop.position.set(0, 1.35, 1.6);
+    micTop.position.set(0, 1.12, 0.6);
     sensorGroup.add(micTop);
 
-    // Trimpot azul de calibração
-    const trimGeo = new THREE.BoxGeometry(1.2, 0.8, 1.2);
-    const trimMat = new THREE.MeshStandardMaterial({ color: 0x2563eb });
+    // Trimpot de ganho ajustável (traseiro)
+    const trimGeo = new THREE.BoxGeometry(1.0, 0.6, 1.0);
+    const trimMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.7 });
     const trimpot = new THREE.Mesh(trimGeo, trimMat);
-    trimpot.position.set(0, 0.5, -0.8);
+    trimpot.position.set(0, 0.4, -1.0);
     sensorGroup.add(trimpot);
 
-    // Parafuso de bronze no topo do trimpot
-    const screwGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 12);
-    const screwMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.8 });
+    // Parafuso de ajuste do trimpot
+    const screwGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.15, 12);
+    const screwMat = new THREE.MeshStandardMaterial({ color: 0xfef08a, metalness: 0.9 });
     const screw = new THREE.Mesh(screwGeo, screwMat);
-    screw.position.set(0, 0.95, -0.8);
+    screw.position.set(0, 0.72, -1.0);
     sensorGroup.add(screw);
 
-    // LED miniatura indicador do microfone
-    const smdGeo = new THREE.BoxGeometry(0.4, 0.2, 0.4);
-    this.sensorLedMat = new THREE.MeshBasicMaterial({ color: 0x334155 });
-    this.sensorLed = new THREE.Mesh(smdGeo, this.sensorLedMat);
-    this.sensorLed.position.set(1.2, 0.25, 0.5);
-    sensorGroup.add(this.sensorLed);
+    // 3 Pinos do MAX4466 (VCC, GND, OUT)
+    const pinGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.6, 8);
+    const pinMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9 });
+    [-0.8, 0, 0.8].forEach(px => {
+      const pin = new THREE.Mesh(pinGeo, pinMat);
+      pin.position.set(px, -0.3, 1.6);
+      sensorGroup.add(pin);
+    });
 
     this.scene.add(sensorGroup);
   }
 
-  buildTrafficLeds(x, y, z) {
-    const ledSpacing = 2.4;
-    const colors = [
-      { key: 'green', color: 0x10b981, emissive: 0x059669, offsetZ: -ledSpacing },
-      { key: 'yellow', color: 0xf59e0b, emissive: 0xd97706, offsetZ: 0 },
-      { key: 'red', color: 0xef4444, emissive: 0xdc2626, offsetZ: ledSpacing }
+  buildLeds10mm(x, y, z) {
+    const spacing = 3.6; // Espaçamento amplo para os LEDs grandes de 10mm
+    const configs = [
+      { key: 'green', color: 0x10b981, emissive: 0x059669, offsetX: -spacing, label: 'D18 (Verde)' },
+      { key: 'yellow', color: 0xf59e0b, emissive: 0xd97706, offsetX: 0, label: 'D19 (Amarelo)' },
+      { key: 'red', color: 0xef4444, emissive: 0xdc2626, offsetX: spacing, label: 'D21 (Vermelho)' }
     ];
 
-    colors.forEach((cfg) => {
+    configs.forEach((cfg) => {
       const ledGroup = new THREE.Group();
-      ledGroup.position.set(x, y, z + cfg.offsetZ);
+      ledGroup.position.set(x + cfg.offsetX, y, z);
 
-      // Cúpula do LED (Cilindro + Hemisfério no topo)
-      const cylinderGeo = new THREE.CylinderGeometry(0.6, 0.6, 1.2, 24);
-      const domeGeo = new THREE.SphereGeometry(0.6, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+      // Cúpula do LED 10mm (raio 0.9 maior e translúcido)
+      const radius = 0.9;
+      const cylinderHeight = 1.4;
+      const cylinderGeo = new THREE.CylinderGeometry(radius, radius, cylinderHeight, 32);
+      const domeGeo = new THREE.SphereGeometry(radius, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
 
       const mat = new THREE.MeshStandardMaterial({
         color: cfg.color,
-        roughness: 0.1,
+        roughness: 0.15,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.88,
         emissive: 0x000000,
         emissiveIntensity: 0
       });
 
       const cylinder = new THREE.Mesh(cylinderGeo, mat);
-      cylinder.position.y = 0.6;
+      cylinder.position.y = cylinderHeight / 2;
       cylinder.castShadow = true;
       ledGroup.add(cylinder);
 
       const dome = new THREE.Mesh(domeGeo, mat);
-      dome.position.y = 1.2;
+      dome.position.y = cylinderHeight;
       ledGroup.add(dome);
 
-      // Base anelar plástica do LED
-      const baseGeo = new THREE.CylinderGeometry(0.7, 0.7, 0.2, 24);
-      const base = new THREE.Mesh(baseGeo, mat);
-      base.position.y = 0.1;
-      ledGroup.add(base);
+      // Anel base da cúpula de 10mm
+      const ringGeo = new THREE.CylinderGeometry(radius + 0.12, radius + 0.12, 0.25, 32);
+      const ring = new THREE.Mesh(ringGeo, mat);
+      ring.position.y = 0.12;
+      ledGroup.add(ring);
 
-      // Terminais metálicos (pernas do LED inseridas na protoboard)
-      const legGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.6, 8);
-      const legMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.9 });
-      const leg1 = new THREE.Mesh(legGeo, legMat);
-      leg1.position.set(-0.25, -0.3, 0);
-      ledGroup.add(leg1);
-      const leg2 = new THREE.Mesh(legGeo, legMat);
-      leg2.position.set(0.25, -0.3, 0);
-      ledGroup.add(leg2);
+      // Pernas do LED (terminais metálicos)
+      const legGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.7, 8);
+      const legMat = new THREE.MeshStandardMaterial({ color: 0xd4d4d8, metalness: 0.9 });
+      const legA = new THREE.Mesh(legGeo, legMat);
+      legA.position.set(-0.35, -0.35, 0);
+      ledGroup.add(legA);
+      const legK = new THREE.Mesh(legGeo, legMat);
+      legK.position.set(0.35, -0.35, 0);
+      ledGroup.add(legK);
 
-      // Luz Pontual associada ao LED
-      const pLight = new THREE.PointLight(cfg.color, 0, 10);
-      pLight.position.set(x, y + 1.5, z + cfg.offsetZ);
+      // Resistor limitador de 220Ω montado na protoboard
+      const resGeo = new THREE.CylinderGeometry(0.22, 0.22, 1.2, 16);
+      const resMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.5 });
+      const resistor = new THREE.Mesh(resGeo, resMat);
+      resistor.rotation.x = Math.PI / 2;
+      resistor.position.set(-0.35, 0.2, 1.4);
+      ledGroup.add(resistor);
+
+      // Luz pontual para iluminar a bancada e a protoboard ao acender
+      const pLight = new THREE.PointLight(cfg.color, 0, 14);
+      pLight.position.set(x + cfg.offsetX, y + 2.2, z);
       this.scene.add(pLight);
 
       this.leds[cfg.key] = mat;
@@ -317,18 +350,38 @@ class NoiseLight3D {
   }
 
   buildJumperWires() {
-    // Cria fios curvados estéticos (splines) entre os pinos
-    const wires = [
-      { start: [-1.8, 1.5, 2.5], end: [4.5, 1.2, -5.4], color: 0x10b981 }, // Fio Verde (GPIO 25)
-      { start: [-1.8, 1.5, 3.2], end: [4.5, 1.2, -3.0], color: 0xf59e0b }, // Fio Amarelo (GPIO 26)
-      { start: [-1.8, 1.5, 3.9], end: [4.5, 1.2, -0.6], color: 0xef4444 }, // Fio Vermelho (GPIO 27)
-      { start: [-1.8, 1.5, -2.5], end: [6.5, 1.2, 1.0], color: 0x38bdf8 }  // Fio Sinal Sensor (GPIO 34)
+    this.wiresGroup = new THREE.Group();
+
+    // Definição precisa dos fios conforme a montagem do lado 3V3
+    const wiresData = [
+      // 1. Alimentação VCC (Pino 3V3 do ESP32 -> VCC do MAX4466) [Fio Vermelho]
+      { start: [-2.9, 1.5, -0.6], end: [6.0, 1.4, 4.8], color: 0xef4444, height: 4.0 },
+      
+      // 2. Terra GND (Pino GND do ESP32 -> Barramento GND e MAX4466) [Fio Preto]
+      { start: [-2.9, 1.5, 0.1], end: [6.8, 1.4, 4.8], color: 0x1f2937, height: 3.2 },
+
+      // 3. Sinal de Áudio (Pino D4 / GPIO 4 -> OUT do MAX4466) [Fio Laranja]
+      { start: [-2.9, 1.5, 1.5], end: [7.6, 1.4, 4.8], color: 0xf97316, height: 4.5 },
+
+      // 4. Sinal LED Verde (Pino D18 / GPIO 18 -> Resistor LED Verde) [Fio Verde]
+      { start: [-2.9, 1.5, 3.6], end: [-0.4, 1.4, -4.2], color: 0x10b981, height: 3.8 },
+
+      // 5. Sinal LED Amarelo (Pino D19 / GPIO 19 -> Resistor LED Amarelo) [Fio Amarelo]
+      { start: [-2.9, 1.5, 4.3], end: [3.2, 1.4, -4.2], color: 0xfacc15, height: 3.5 },
+
+      // 6. Sinal LED Vermelho (Pino D21 / GPIO 21 -> Resistor LED Vermelho) [Fio Roxo/Azul]
+      { start: [-2.9, 1.5, 5.0], end: [6.8, 1.4, -4.2], color: 0x8b5cf6, height: 3.6 },
+
+      // 7. Retorno GND dos Cátodos dos 3 LEDs para o barramento azul
+      { start: [0.35, 1.3, -4.2], end: [0.35, 1.25, 7.0], color: 0x3b82f6, height: 2.2 },
+      { start: [3.95, 1.3, -4.2], end: [3.95, 1.25, 7.0], color: 0x3b82f6, height: 2.2 },
+      { start: [7.55, 1.3, -4.2], end: [7.55, 1.25, 7.0], color: 0x3b82f6, height: 2.2 }
     ];
 
-    wires.forEach((w) => {
+    wiresData.forEach(w => {
       const mid = [
         (w.start[0] + w.end[0]) / 2,
-        Math.max(w.start[1], w.end[1]) + 2.5 + Math.random() * 0.8,
+        Math.max(w.start[1], w.end[1]) + (w.height || 3.0),
         (w.start[2] + w.end[2]) / 2
       ];
 
@@ -338,41 +391,52 @@ class NoiseLight3D {
         new THREE.Vector3(...w.end)
       );
 
-      const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.12, 8, false);
+      const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.13, 8, false);
       const tubeMat = new THREE.MeshStandardMaterial({
         color: w.color,
-        roughness: 0.5
+        roughness: 0.45,
+        metalness: 0.1
       });
-      const wireMesh = new THREE.Mesh(tubeGeo, tubeMat);
-      this.scene.add(wireMesh);
+
+      const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
+      tubeMesh.castShadow = true;
+      this.wiresGroup.add(tubeMesh);
     });
+
+    this.scene.add(this.wiresGroup);
+  }
+
+  toggleWires(show) {
+    if (typeof show === 'boolean') {
+      this.wiresVisible = show;
+    } else {
+      this.wiresVisible = !this.wiresVisible;
+    }
+
+    if (this.wiresGroup) {
+      this.wiresGroup.visible = this.wiresVisible;
+    }
+    return this.wiresVisible;
   }
 
   setNoiseCount(count) {
     this.currentNoise = count;
 
-    // Atualiza o microfone 3D (pisca o LED do sensor quando há disparos)
-    if (count > 0 && this.sensorLedMat) {
-      this.sensorLedMat.color.setHex(0x38bdf8);
-    } else if (this.sensorLedMat) {
-      this.sensorLedMat.color.setHex(0x334155);
-    }
-
-    // Lógica das cores conforme o código do ESP32
-    if (count < 2) {
-      // VERDE
+    // Lógica alinhada aos limiares do semáforo:
+    // 0 a 14: Silêncio (Verde)
+    // 15 a 45: Atenção (Amarelo)
+    // 46+: Alerta Crítico (Vermelho Piscando)
+    if (count < 15) {
       this.setLedState('green', true);
       this.setLedState('yellow', false);
       this.setLedState('red', false);
       this.isBlinking = false;
-    } else if (count >= 2 && count < 15) {
-      // AMARELO
+    } else if (count >= 15 && count < 48) {
       this.setLedState('green', false);
       this.setLedState('yellow', true);
       this.setLedState('red', false);
       this.isBlinking = false;
     } else {
-      // VERMELHO PISCANTE
       this.setLedState('green', false);
       this.setLedState('yellow', false);
       this.isBlinking = true;
@@ -386,8 +450,8 @@ class NoiseLight3D {
 
     if (state) {
       mat.emissive.setHex(mat.color.getHex());
-      mat.emissiveIntensity = 1.2;
-      light.intensity = 2.5;
+      mat.emissiveIntensity = 1.6;
+      light.intensity = 3.2;
     } else {
       mat.emissiveIntensity = 0;
       light.intensity = 0;
@@ -401,10 +465,10 @@ class NoiseLight3D {
       this.controls.update();
     }
 
-    // Gerenciador do efeito piscante do LED Vermelho (Alerta)
+    // Efeito estroboscópico de alerta no LED Vermelho
     if (this.isBlinking) {
-      this.blinkCounter = (this.blinkCounter + 1) % 24;
-      const shouldLight = this.blinkCounter < 12;
+      this.blinkCounter = (this.blinkCounter + 1) % 20;
+      const shouldLight = this.blinkCounter < 10;
       this.setLedState('red', shouldLight);
     }
 

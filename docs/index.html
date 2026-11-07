@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NoiseLight — O Semáforo do Barulho | Feira de Robótica 6º Ano</title>
-  <meta name="description" content="Showcase interativo do projeto educacional NoiseLight com ESP32, maquete 3D virtual, circuito elétrico interativo e análise de código C++.">
+  <title>NoiseLight — O Semáforo do Barulho | Feira de Ciências 6º Ano</title>
+  <meta name="description" content="Apresentação interativa do projeto NoiseLight: maquete 3D, esquema de montagem com ESP32 e microfone MAX4466, e código-fonte explicado.">
   
   <!-- Fontes do Google: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +16,7 @@
 </head>
 <body>
 
-  <!-- Canvas Dinâmico de Fundo (60 FPS com Orbes e Partículas Fluindo) -->
+  <!-- Canvas Dinâmico de Fundo (Partículas e Luz Ambiente) -->
   <canvas id="bg-canvas"></canvas>
   <div class="bg-grain" aria-hidden="true"></div>
 
@@ -26,20 +26,18 @@
       <a href="#" class="brand">
         <span class="brand-signal-orb"></span>
         <span>NoiseLight</span>
-        <span class="brand-badge">Feira de Robótica</span>
+        <span class="brand-badge">Feira de Ciências &bull; 6º Ano</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#secao-3d">1. Simulação 3D</a></li>
-        <li><a href="#secao-circuito">2. Corrente Elétrica</a></li>
+        <li><a href="#secao-3d">1. Maquete 3D</a></li>
+        <li><a href="#secao-montagem">2. Fiações &amp; Montagem</a></li>
         <li><a href="#secao-codigo">3. Código-Fonte</a></li>
-        <li><a href="#secao-hardware">4. Hardware</a></li>
-        <li><a href="#secao-equipe">5. Equipe</a></li>
       </ul>
       <a href="https://github.com/luisfpatrocinio/NoiseLight" target="_blank" rel="noopener noreferrer" class="btn-github">
         <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
         </svg>
-        Ver no GitHub
+        GitHub
       </a>
     </div>
   </header>
@@ -48,128 +46,103 @@
   <section class="hero">
     <div class="hero-tag">
       <span class="pulse-dot"></span>
-      <span>Projeto Educacional para o 6º Ano do Ensino Fundamental</span>
+      <span>Projeto de Robótica &amp; Educação STEAM</span>
     </div>
     <h1>O <span class="highlight">Semáforo do Barulho</span> com ESP32</h1>
     <p>
-      Um dispositivo inteligente que monitora o nível de ruído da sala de aula em tempo real.
-      Aprenda como a tecnologia, a eletrônica e a programação se unem para criar um ambiente de estudo agradável e harmonioso.
+      Um dispositivo inteligente com microfone analógico <strong>MAX4466</strong> e <strong>3 LEDs gigantes de 10mm</strong> que monitora o nível de som da sala de aula em tempo real, incentivando a concentração e a convivência escolar.
     </p>
 
+    <!-- Indicadores de Status do Semáforo -->
     <div class="status-pill-group">
       <div class="status-pill">
         <span class="indicator-dot dot-green"></span>
-        <strong>Verde:</strong> Silêncio (&lt; 2 disparos/s)
+        <strong>Verde:</strong> Silêncio (Estudo &amp; Concentração)
       </div>
       <div class="status-pill">
         <span class="indicator-dot dot-yellow"></span>
-        <strong>Amarelo:</strong> Atenção (2 a 14 disparos/s)
+        <strong>Amarelo:</strong> Atenção (Conversas em grupo)
       </div>
       <div class="status-pill">
         <span class="indicator-dot dot-red"></span>
-        <strong>Vermelho:</strong> Alerta Piscando (≥ 15 disparos/s)
-      </div>
-    </div>
-  </section>
-
-  <!-- Pilares Técnicos -->
-  <section class="pillars-section">
-    <div class="pillars-grid">
-      <div class="pillar-item">
-        <div class="pillar-num">01 / Amostragem</div>
-        <div>
-          <div class="pillar-metric">1.0 s</div>
-          <div class="pillar-title">Janela Temporal</div>
-          <p class="pillar-text">Contagem cíclica de pulsos sonoros via millis() sem interromper o processamento da placa.</p>
-        </div>
-      </div>
-
-      <div class="pillar-item">
-        <div class="pillar-num">02 / Processador</div>
-        <div>
-          <div class="pillar-metric">240 MHz</div>
-          <div class="pillar-title">ESP32 Dual-Core</div>
-          <p class="pillar-text">Microcontrolador de alto desempenho com leitura rápida dos pulsos acústicos digitais.</p>
-        </div>
-      </div>
-
-      <div class="pillar-item">
-        <div class="pillar-num">03 / Sinalização</div>
-        <div>
-          <div class="pillar-metric">3 Canais</div>
-          <div class="pillar-title">Feedback Óptico</div>
-          <p class="pillar-text">LEDs difusos de 5mm acionados individualmente com base no nível de ruído detectado.</p>
-        </div>
-      </div>
-
-      <div class="pillar-item">
-        <div class="pillar-num">04 / Proteção</div>
-        <div>
-          <div class="pillar-metric">220 Ω</div>
-          <div class="pillar-title">Lei de Ohm</div>
-          <p class="pillar-text">Resistores limitadores calculados para proteger os semicondutores e limitar a corrente em 6mA.</p>
-        </div>
+        <strong>Vermelho:</strong> Alerta (Barulho Excessivo / Pisca)
       </div>
     </div>
   </section>
 
   <main>
-    <!-- ========================================== -->
-    <!-- SEÇÃO 1: PROJETO EM 3D INTERATIVO          -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- 1. MAQUETE 3D DO PROJETO EM FUNCIONAMENTO                -->
+    <!-- ======================================================== -->
     <section id="secao-3d" class="section-card">
       <div class="section-header">
         <div>
-          <span class="section-badge">Seção 1</span>
-          <h2 class="section-title">🕹️ Maquete Virtual 3D em Tempo Real</h2>
+          <span class="section-badge">Item 1</span>
+          <h2 class="section-title">🕹️ Maquete 3D do Projeto em Funcionamento</h2>
           <p class="section-desc">
-            Interaja com o modelo tridimensional do projeto. Ajuste o nível de barulho, teste cenários pré-definidos ou ative o microfone do seu computador para ver o semáforo reagir ao som da sua voz!
+            Explore o circuito tridimensional com o ESP32, o módulo microfone MAX4466 e os 3 LEDs de 10mm. Use os botões abaixo para testar cenários, falar no microfone real ou revelar as fiações da montagem!
           </p>
         </div>
       </div>
 
       <div class="sim-grid">
-        <!-- Visualizador 3D -->
+        <!-- Visualizador Three.js -->
         <div class="viewport-3d-wrapper" id="canvas-3d-box">
           <div class="viewport-overlay">
-            <div class="overlay-status" id="status-badge">🟢 Silêncio (Ideal)</div>
-            <div style="font-size: 0.75rem; color: #a1a1aa; max-width: 280px;" id="status-desc">
-              Abaixo de 2 disparos/s: Sala em silêncio.
+            <div class="overlay-status status-green" id="status-badge">🟢 Silêncio (Ambiente Calmo)</div>
+            <div style="font-size: 0.78rem; color: #a1a1aa; max-width: 320px; line-height: 1.4;" id="status-desc">
+              Volume ideal para estudo e concentração. Apenas o LED verde aceso.
             </div>
           </div>
           <div class="viewport-hints">
-            🖱️ Clique e arraste para girar em 3D | Role o scroll para zoom
+            🖱️ Clique e arraste para girar a maquete 3D | Scroll para zoom
           </div>
         </div>
 
-        <!-- Painel de Controles do Simulador -->
+        <!-- Painel de Controle da Maquete -->
         <div class="control-panel">
+          <!-- Botão Toggle de Revelar Fiações -->
+          <div class="control-group">
+            <label class="control-label">Montagem Física:</label>
+            <button class="btn-wires active" id="btn-toggle-wires">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+              <span>Fiações: Visíveis (Clique para Ocultar)</span>
+            </button>
+          </div>
+
+          <!-- Controle de Ruído Manual -->
           <div class="control-group">
             <div class="control-label">
-              <span>Disparos de Som / Segundo:</span>
-              <span class="control-value" id="noise-val">0</span>
+              <span>Nível de Ruído no Ambiente:</span>
+              <span class="control-value" id="noise-val">5</span>
             </div>
-            <input type="range" id="noise-slider" min="0" max="30" value="0">
+            <input type="range" id="noise-slider" min="0" max="70" value="5">
           </div>
 
+          <!-- Cenários da Sala de Aula -->
           <div class="control-group">
-            <label class="control-label">Cenários da Sala de Aula:</label>
+            <label class="control-label">Simular Cenários Escolares:</label>
             <div class="preset-buttons">
-              <button class="btn-preset active" data-value="0">
+              <button class="btn-preset active" data-value="5">
                 <span>🤫 Prova / Concentração</span>
-                <small>0 disparos (Verde)</small>
+                <small>Silêncio (Verde)</small>
               </button>
-              <button class="btn-preset" data-value="6">
+              <button class="btn-preset" data-value="28">
                 <span>👥 Trabalho em Grupo</span>
-                <small>6 disparos (Amarelo)</small>
+                <small>Atenção (Amarelo)</small>
               </button>
-              <button class="btn-preset" data-value="22">
+              <button class="btn-preset" data-value="60">
                 <span>📢 Recreio / Gritaria</span>
-                <small>22 disparos (Vermelho)</small>
+                <small>Alerta (Vermelho)</small>
               </button>
             </div>
           </div>
 
+          <!-- Teste com Microfone Real do Visitante -->
           <div class="control-group">
             <button class="btn-mic" id="btn-mic">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -177,291 +150,211 @@
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                 <line x1="12" y1="19" x2="12" y2="22"></line>
               </svg>
-              🎙️ Testar com Microfone Real
+              <span>🎙️ Testar com Minha Voz (Microfone Real)</span>
             </button>
             <p style="font-size: 0.72rem; color: #71717a; text-align: center;">
-              Fale ou bata palmas para o semáforo reagir ao vivo via Web Audio API!
+              Fale ou bata palmas na frente da tela para testar o semáforo ao vivo!
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- SEÇÃO 2: CORRENTE ELÉTRICA & ELETRÔNICA    -->
-    <!-- ========================================== -->
-    <section id="secao-circuito" class="section-card">
+    <!-- ======================================================== -->
+    <!-- 2. FIAÇÕES & MONTAGEM FÍSICA NA PROTOBOARD               -->
+    <!-- ======================================================== -->
+    <section id="secao-montagem" class="section-card">
       <div class="section-header">
         <div>
-          <span class="section-badge">Seção 2</span>
-          <h2 class="section-title">⚡ Como o ESP32 Controla os LEDs?</h2>
+          <span class="section-badge">Item 2</span>
+          <h2 class="section-title">🔌 Esquema de Fiações &amp; Montagem Física</h2>
           <p class="section-desc">
-            Veja a corrente elétrica (fluxo ordenado de elétrons) saindo dos pinos GPIO do ESP32, passando pelo resistor protetor e iluminando o LED.
+            Para caber em protoboards comuns, o ESP32 foi montado utilizando <strong>apenas a fileira do pino 3V3</strong>. Veja a rota de cada cabo jumper e a função de cada componente:
           </p>
         </div>
       </div>
 
-      <div class="circuit-layout">
-        <!-- Canvas Animado do Circuito -->
-        <div class="circuit-canvas-box">
-          <canvas id="canvas-circuit"></canvas>
+      <!-- Cartões das Conexões Físicas -->
+      <div class="wiring-grid">
+        <!-- VCC -->
+        <div class="wiring-card">
+          <div class="wiring-card-header">
+            <span class="wiring-card-title">⚡ Alimentação do Sensor</span>
+            <span class="wire-tag wire-tag-red">Fio Vermelho</span>
+          </div>
+          <div class="wiring-pin-route">
+            <span>Pino 3V3 (ESP32)</span>
+            <span>&rarr;</span>
+            <span>VCC (MAX4466)</span>
+          </div>
+          <p class="wiring-desc">
+            Fornece 3.3V regulados com baixo ruído de chaveamento, garantindo leituras estáveis de áudio no conversor ADC.
+          </p>
         </div>
 
-        <!-- Painel Conceitual e Seletor de LEDs -->
-        <div class="circuit-panel">
-          <div class="control-group">
-            <label class="control-label">Selecione o LED para ver o circuito:</label>
-            <div class="led-picker">
-              <button class="led-pick-btn active-green" data-led="green">
-                <span class="indicator-dot dot-green"></span>
-                <span>GPIO 25 (Verde)</span>
-              </button>
-              <button class="led-pick-btn" data-led="yellow">
-                <span class="indicator-dot dot-yellow"></span>
-                <span>GPIO 26 (Amarelo)</span>
-              </button>
-              <button class="led-pick-btn" data-led="red">
-                <span class="indicator-dot dot-red"></span>
-                <span>GPIO 27 (Vermelho)</span>
-              </button>
-            </div>
+        <!-- GND -->
+        <div class="wiring-card">
+          <div class="wiring-card-header">
+            <span class="wiring-card-title">🔌 Terra Comum (GND)</span>
+            <span class="wire-tag wire-tag-black">Fio Preto</span>
           </div>
-
-          <!-- Medições em Tempo Real -->
-          <div class="formula-card">
-            <div id="circuit-state-badge">
-              CORRENTE ATIVA NO GPIO 25
-            </div>
-            <div>⚡ <strong>Tensão no Pino:</strong> <span id="calc-voltage">3.3 V (HIGH)</span></div>
-            <div>💡 <strong>Queda no LED:</strong> <span id="calc-vled">2.0 V</span></div>
-            <div>🌊 <strong>Corrente Resultante:</strong> <span id="calc-current" style="color: var(--led-green);">5.9 mA</span></div>
+          <div class="wiring-pin-route">
+            <span>Pino GND (ESP32)</span>
+            <span>&rarr;</span>
+            <span>Barramento Azul (-)</span>
           </div>
-
-          <!-- Explicação Didática para o 6º Ano -->
-          <div class="concept-box">
-            <h4>💡 Por que usamos o Resistor?</h4>
-            <p>
-              O ESP32 fornece <strong>3.3 Volts</strong>, mas o LED precisa de cerca de <strong>2.0 Volts</strong>. Sem o resistor, a corrente elétrica seria tão alta que queimaria o filamento do LED em frações de segundo! O resistor de <strong>220 Ω</strong> funciona como um limitador de velocidade, mantendo a corrente segura em aproximadamente 6 miliamperes.
-            </p>
-          </div>
-
-          <div class="concept-box">
-            <h4>🔬 O que é Nível Lógico (HIGH e LOW)?</h4>
-            <p>
-              Quando o código executa <code>digitalWrite(pino, HIGH)</code>, o ESP32 fecha uma chave interna conectando o pino aos 3.3V, fazendo os elétrons correrem. Quando executa <code>LOW</code>, ele desliga a energia (0V).
-            </p>
-          </div>
+          <p class="wiring-desc">
+            Fecha o circuito elétrico interligando o negativo do módulo de som e os 3 cátodos (pernas curtas) dos LEDs.
+          </p>
         </div>
+
+        <!-- Sinal de Som -->
+        <div class="wiring-card">
+          <div class="wiring-card-header">
+            <span class="wiring-card-title">🎙️ Sinal Analógico de Áudio</span>
+            <span class="wire-tag wire-tag-orange">Fio Laranja</span>
+          </div>
+          <div class="wiring-pin-route">
+            <span>OUT (MAX4466)</span>
+            <span>&rarr;</span>
+            <span>Pino D4 (GPIO 4)</span>
+          </div>
+          <p class="wiring-desc">
+            Envia as ondas acústicas em tempo real para a entrada analógica ADC2 do microprocessador do ESP32.
+          </p>
+        </div>
+
+        <!-- LED Verde -->
+        <div class="wiring-card">
+          <div class="wiring-card-header">
+            <span class="wiring-card-title">🟢 LED 10mm Verde (Silêncio)</span>
+            <span class="wire-tag wire-tag-green">Fio Verde</span>
+          </div>
+          <div class="wiring-pin-route">
+            <span>Pino D18 (GPIO 18)</span>
+            <span>&rarr;</span>
+            <span>Resistor 220Ω &rarr; LED</span>
+          </div>
+          <p class="wiring-desc">
+            Sinaliza ambiente silencioso e concentração. O resistor limita a corrente elétrica em ~6mA para proteger o LED.
+          </p>
+        </div>
+
+        <!-- LED Amarelo -->
+        <div class="wiring-card">
+          <div class="wiring-card-header">
+            <span class="wiring-card-title">🟡 LED 10mm Amarelo (Atenção)</span>
+            <span class="wire-tag wire-tag-yellow">Fio Amarelo</span>
+          </div>
+          <div class="wiring-pin-route">
+            <span>Pino D19 (GPIO 19)</span>
+            <span>&rarr;</span>
+            <span>Resistor 220Ω &rarr; LED</span>
+          </div>
+          <p class="wiring-desc">
+            Indica conversas moderadas na sala. Alerta visual suave antes de o barulho se tornar excessivo.
+          </p>
+        </div>
+
+        <!-- LED Vermelho -->
+        <div class="wiring-card">
+          <div class="wiring-card-header">
+            <span class="wiring-card-title">🔴 LED 10mm Vermelho (Alerta)</span>
+            <span class="wire-tag wire-tag-purple">Fio Roxo</span>
+          </div>
+          <div class="wiring-pin-route">
+            <span>Pino D21 (GPIO 21)</span>
+            <span>&rarr;</span>
+            <span>Resistor 220Ω &rarr; LED</span>
+          </div>
+          <p class="wiring-desc">
+            Acionado quando o som atinge o limiar crítico. Pisca em modo de alerta estroboscópico com retenção de 1,5s.
+          </p>
+        </div>
+      </div>
+
+      <!-- Caixa de Conceito da Lei de Ohm -->
+      <div class="concept-box" style="margin-top: 1.5rem;">
+        <h4>💡 Por que usamos resistores de 220Ω nos LEDs de 10mm? (Lei de Ohm)</h4>
+        <p>
+          O ESP32 envia <strong>3.3 Volts</strong> em cada pino digital. Como o LED precisa de apenas cerca de <strong>2.0 Volts</strong>, o resistor de 220Ω absorve o excesso de voltagem e limita a corrente em um valor seguro ($I = V/R \approx 6\text{ a }10\text{ mA}$). Sem o resistor, o LED queimaria em frações de segundo!
+        </p>
       </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- SEÇÃO 3: CÓDIGO-FONTE & PRINCIPAIS FUNÇÕES -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- 3. VISUALIZAÇÃO DO CÓDIGO-FONTE DO ESP32                 -->
+    <!-- ======================================================== -->
     <section id="secao-codigo" class="section-card">
       <div class="section-header">
         <div>
-          <span class="section-badge">Seção 3</span>
-          <h2 class="section-title">💻 O Código do ESP32 Passo a Passo</h2>
+          <span class="section-badge">Item 3</span>
+          <h2 class="section-title">💻 Visualização do Código do ESP32</h2>
           <p class="section-desc">
-            Descubra as principais funções da programação do semáforo. Clique em cada conceito abaixo para ver como o código em C++ / Arduino foi construído.
+            Navegue pelos blocos essenciais do firmware em C++ / Arduino. Veja como o ESP32 lê o sinal analógico, toma decisões e controla os LEDs:
           </p>
         </div>
       </div>
 
-      <div class="code-grid">
-        <!-- Navegação de Tópicos do Código -->
-        <div class="code-nav">
-          <button class="code-nav-btn active" data-section="setup">
-            <strong>1. Configuração dos Pinos</strong>
-            <span>setup() &amp; pinMode()</span>
-          </button>
-          <button class="code-nav-btn" data-section="sampling">
-            <strong>2. Janela de Amostragem (1s)</strong>
-            <span>Contagem com millis()</span>
-          </button>
-          <button class="code-nav-btn" data-section="debounce">
-            <strong>3. Filtro Anti-Eco</strong>
-            <span>Debounce acústico com delay(5ms)</span>
-          </button>
-          <button class="code-nav-btn" data-section="decision">
-            <strong>4. Lógica do Semáforo</strong>
-            <span>Condicionais if, else if</span>
-          </button>
-          <button class="code-nav-btn" data-section="blink">
-            <strong>5. Alarme Piscante</strong>
-            <span>Efeito estroboscópico de alerta</span>
-          </button>
+      <!-- Abas de Navegação do Código -->
+      <div class="code-tabs-bar">
+        <button class="code-tab-btn active" data-snippet="complete">
+          📜 Código Completo
+        </button>
+        <button class="code-tab-btn" data-snippet="sampling">
+          🎙️ 1. Leitura do MAX4466 (Peak-to-Peak)
+        </button>
+        <button class="code-tab-btn" data-snippet="decision">
+          🚦 2. Lógica do Semáforo
+        </button>
+        <button class="code-tab-btn" data-snippet="nonblocking">
+          🚨 3. Piscar sem Travar (millis)
+        </button>
+      </div>
+
+      <!-- Visualizador de Código Moderno -->
+      <div class="code-viewer-container">
+        <div class="code-viewer-header">
+          <div class="window-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span>src/main.cpp &bull; C++ / PlatformIO</span>
+          <button class="btn-copy-code" id="btn-copy-code">📋 Copiar Código</button>
         </div>
 
-        <!-- Visualizador de Código -->
-        <div class="code-viewer-container">
-          <div class="code-viewer-header">
-            <div class="window-dots">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <span>src/main.cpp</span>
-            <span>C++ (Arduino / ESP32)</span>
-          </div>
+        <pre class="code-content"><code id="code-display">// --- CÓDIGO COMPLETO DO FIRMWARE (src/main.cpp) ---
+#include &lt;Arduino.h&gt;
 
-          <pre class="code-content"><code id="code-display"><span class="hl-com">// 1. Função executada uma única vez ao ligar o ESP32</span>
-<span class="hl-type">void</span> <span class="hl-func">setup</span>() {
-  <span class="hl-func">Serial</span>.<span class="hl-func">begin</span>(<span class="hl-num">115200</span>); <span class="hl-com">// Comunicação com o computador</span>
+const int PINO_SENSOR_SOM   = 4;  // OUT do MAX4466 (Entrada Analógica D4)
+const int PINO_LED_VERDE     = 18; // LED 10mm Verde (D18)
+const int PINO_LED_AMARELO   = 19; // LED 10mm Amarelo (D19)
+const int PINO_LED_VERMELHO  = 21; // LED 10mm Vermelho (D21)
 
-  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_SENSOR_SOM, <span class="hl-kw">INPUT</span>);  <span class="hl-com">// Sensor de som envia dados para o ESP32</span></span>
-  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_VERDE, <span class="hl-kw">OUTPUT</span>);   <span class="hl-com">// Pino envia corrente para o LED Verde</span></span>
-  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_AMARELO, <span class="hl-kw">OUTPUT</span>); <span class="hl-com">// Pino envia corrente para o LED Amarelo</span></span>
-  <span class="hl-target"><span class="hl-func">pinMode</span>(PINO_LED_VERMELHO, <span class="hl-kw">OUTPUT</span>);<span class="hl-com">// Pino envia corrente para o LED Vermelho</span></span>
+int limiarAmarelo  = 900;  // Acima deste valor passa para Amarelo
+int limiarVermelho = 2200; // Acima deste valor passa para Vermelho
+
+void setup() {
+  Serial.begin(115200);
+  analogReadResolution(12); // ADC do ESP32: 0 a 4095
+  analogSetPinAttenuation(PINO_SENSOR_SOM, ADC_11db);
+
+  pinMode(PINO_LED_VERDE, OUTPUT);
+  pinMode(PINO_LED_AMARELO, OUTPUT);
+  pinMode(PINO_LED_VERMELHO, OUTPUT);
+}
+
+void loop() {
+  // Amostragem Pico-a-Pico durante 50ms
+  int amplitude = medirAmplitudePicoAPico(50);
+  atualizarSemaforo(amplitude);
 }</code></pre>
 
-          <div class="code-explanation">
-            <h5>💡 Como isso funciona?</h5>
-            <p id="code-explanation-text">
-              No <code>setup()</code>, definimos o papel de cada pino. O pino do microfone é configurado como <strong>INPUT</strong> (entrada de dados auditivos) e os pinos dos LEDs são configurados como <strong>OUTPUT</strong> (saídas capazes de fornecer 3.3V para acender os componentes).
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- SEÇÃO 4: MATERIAIS & HARDWARE (BOM)        -->
-    <!-- ========================================== -->
-    <section id="secao-hardware" class="section-card">
-      <div class="section-header">
-        <div>
-          <span class="section-badge">Seção 4</span>
-          <h2 class="section-title">🛠️ Materiais e Especificações do Circuito</h2>
-          <p class="section-desc">
-            Relação completa dos componentes eletrônicos utilizados na montagem da bancada educacional.
-          </p>
-        </div>
-      </div>
-
-      <div class="table-wrapper">
-        <table class="clean-table">
-          <thead>
-            <tr>
-              <th>Componente</th>
-              <th>Especificação Técnica</th>
-              <th>Qtd</th>
-              <th>Conexão no ESP32</th>
-              <th>Função no Projeto</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>ESP32 DevKit V1</strong></td>
-              <td>Dual-Core 240MHz, 3.3V Logic, 520KB SRAM</td>
-              <td>1 un</td>
-              <td><span class="tag-pin">3V3 / GND</span></td>
-              <td>Microcontrolador central do semáforo</td>
-            </tr>
-            <tr>
-              <td><strong>Sensor de Som KY-038</strong></td>
-              <td>Microfone Eletreto com comparador digital LM393</td>
-              <td>1 un</td>
-              <td><span class="tag-pin">GPIO 34 (D0)</span></td>
-              <td>Detecção de ondas acústicas e pulsos digitais</td>
-            </tr>
-            <tr>
-              <td><strong>LED 5mm Verde</strong></td>
-              <td>Tensão direta Vf &approx; 2.0V, Corrente If &approx; 6mA</td>
-              <td>1 un</td>
-              <td><span class="tag-pin">GPIO 25</span></td>
-              <td>Sinalizador de ambiente silencioso e tranquilo</td>
-            </tr>
-            <tr>
-              <td><strong>LED 5mm Amarelo</strong></td>
-              <td>Tensão direta Vf &approx; 2.1V, Corrente If &approx; 5.5mA</td>
-              <td>1 un</td>
-              <td><span class="tag-pin">GPIO 26</span></td>
-              <td>Sinalizador de atenção para ruído moderado</td>
-            </tr>
-            <tr>
-              <td><strong>LED 5mm Vermelho</strong></td>
-              <td>Tensão direta Vf &approx; 1.9V, Corrente If &approx; 6.4mA</td>
-              <td>1 un</td>
-              <td><span class="tag-pin">GPIO 27</span></td>
-              <td>Sinalizador estroboscópico de alerta para ruído crítico</td>
-            </tr>
-            <tr>
-              <td><strong>Resistores de Precisão</strong></td>
-              <td>220 Ω, potência 1/4W, filme de carbono</td>
-              <td>3 un</td>
-              <td><span class="tag-pin">Em série</span></td>
-              <td>Limitação de corrente para proteção dos LEDs</td>
-            </tr>
-            <tr>
-              <td><strong>Protoboard Matriz</strong></td>
-              <td>830 pontos de contato metálicos sem solda</td>
-              <td>1 un</td>
-              <td><span class="tag-pin">Bancada</span></td>
-              <td>Base de montagem dos componentes</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- SEÇÃO 5: EQUIPE & CRÉDITOS DO PROJETO      -->
-    <!-- ========================================== -->
-    <section id="secao-equipe" class="section-card">
-      <div class="section-header">
-        <div>
-          <span class="section-badge">Seção 5</span>
-          <h2 class="section-title">👥 Equipe de Desenvolvimento</h2>
-          <p class="section-desc">
-            Créditos dos alunos do 6º Ano e da coordenação pedagógica na Feira de Ciências e Robótica.
-          </p>
-        </div>
-      </div>
-
-      <div class="team-grid">
-        <div class="team-card">
-          <div>
-            <div class="team-role">Orientação Técnica</div>
-            <div class="team-name">Luis Felipe Patrocínio</div>
-            <div class="team-unit">Professor e Mentor STEAM</div>
-          </div>
-          <p class="team-desc">
-            Supervisão pedagógica, arquitetura de sistemas com ESP32, modelagem 3D e introdução aos fundamentos de robótica.
-          </p>
-        </div>
-
-        <div class="team-card">
-          <div>
-            <div class="team-role">Alunos do 6º Ano</div>
-            <div class="team-name">Célula de Circuitos</div>
-            <div class="team-unit">Montagem Física</div>
-          </div>
-          <p class="team-desc">
-            Posicionamento dos componentes na protoboard, dimensionamento dos resistores e conexão dos cabos jumpers.
-          </p>
-        </div>
-
-        <div class="team-card">
-          <div>
-            <div class="team-role">Alunos do 6º Ano</div>
-            <div class="team-name">Célula de Firmware</div>
-            <div class="team-unit">Programação em C++</div>
-          </div>
-          <p class="team-desc">
-            Implementação da lógica condicional if-else, calibração do tempo de amostragem de 1 segundo e testes seriais.
-          </p>
-        </div>
-
-        <div class="team-card">
-          <div>
-            <div class="team-role">Alunos do 6º Ano</div>
-            <div class="team-name">Célula de Testes</div>
-            <div class="team-unit">Medições Acústicas</div>
-          </div>
-          <p class="team-desc">
-            Simulação de situações reais de sala de aula e calibração dos limiares de disparos do sensor KY-038.
+        <div class="code-explanation">
+          <h5>💡 Explicação Didática</h5>
+          <p id="code-explanation-text">
+            Este é o firmware completo gravado no ESP32. Ele configura o conversor analógico-digital (ADC) para ler o microfone analógico MAX4466 no pino D4 e controla as saídas digitais D18, D19 e D21 para acionar os LEDs de 10mm.
           </p>
         </div>
       </div>
@@ -471,17 +364,17 @@
   <!-- Rodapé -->
   <footer>
     <div class="footer-content">
-      <div class="badge-tag-footer">Robótica &bull; Educação STEAM</div>
+      <div class="badge-tag-footer">Feira de Ciências &amp; Robótica &bull; 6º Ano do Ensino Fundamental</div>
       <p>
-        <strong>NoiseLight — Semáforo do Barulho</strong> | Feira de Ciências e Robótica do 6º Ano do Ensino Fundamental.
+        <strong>NoiseLight — O Semáforo do Barulho</strong> | Desenvolvido por Luis Felipe Patrocínio e alunos do 6º Ano.
       </p>
       <p style="font-size: 0.8rem; color: #71717a;">
-        Desenvolvido para inspirar jovens mentes na exploração da eletrônica, pensamento computacional e convivência escolar.
+        Integrando eletrônica, programação em C++, acústica e cidadania para uma convivência escolar nota 10!
       </p>
     </div>
   </footer>
 
-  <!-- Background Dinâmico (Orbes Luminosos & Partículas Conectadas) -->
+  <!-- Canvas Dinâmico de Fundo -->
   <script>
     (function () {
       const canvas = document.getElementById('bg-canvas');
@@ -492,17 +385,10 @@
       let height = 0;
       let dpr = 1;
 
-      const mouse = { x: 0, y: 0, targetX: 0, targetY: 0, active: false };
-
-      // Orbes de luz atmosférica fluida
       const orbs = [
-        { angle: 0, speed: 0.0006, baseR: 440, color: 'rgba(255, 85, 0, 0.12)' },
-        { angle: 2.2, speed: -0.0007, baseR: 380, color: 'rgba(255, 110, 0, 0.08)' },
-        { angle: 4.4, speed: 0.0005, baseR: 480, color: 'rgba(200, 50, 0, 0.10)' }
+        { angle: 0, speed: 0.0005, baseR: 440, color: 'rgba(255, 85, 0, 0.10)' },
+        { angle: 2.2, speed: -0.0006, baseR: 380, color: 'rgba(56, 189, 248, 0.08)' }
       ];
-
-      let particles = [];
-      const particleCount = window.innerWidth < 768 ? 20 : 40;
 
       function resize() {
         dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -511,69 +397,24 @@
         canvas.width = width * dpr;
         canvas.height = height * dpr;
         ctx.scale(dpr, dpr);
-
-        if (!mouse.active) {
-          mouse.x = width * 0.5;
-          mouse.y = height * 0.4;
-          mouse.targetX = mouse.x;
-          mouse.targetY = mouse.y;
-        }
-
-        particles = [];
-        for (let i = 0; i < particleCount; i++) {
-          particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
-            size: 1 + Math.random() * 1.5,
-            alpha: 0.15 + Math.random() * 0.3
-          });
-        }
       }
 
       window.addEventListener('resize', resize);
-      window.addEventListener('mousemove', (e) => {
-        mouse.targetX = e.clientX;
-        mouse.targetY = e.clientY;
-        mouse.active = true;
-      });
-
-      let animationId = null;
-      let isVisible = true;
-
-      document.addEventListener('visibilitychange', () => {
-        isVisible = !document.hidden;
-        if (isVisible && !animationId) {
-          requestAnimationFrame(render);
-        }
-      });
+      resize();
 
       function render(time) {
-        if (!isVisible) {
-          animationId = null;
-          return;
-        }
-
-        // Interpolação suave do mouse (lerp)
-        mouse.x += (mouse.targetX - mouse.x) * 0.05;
-        mouse.y += (mouse.targetY - mouse.y) * 0.05;
-
-        // Fundo escuro profundo
-        ctx.fillStyle = '#08080a';
+        ctx.fillStyle = '#0a0a0f';
         ctx.fillRect(0, 0, width, height);
 
-        // 1. Orbes de luz fluidos
         orbs.forEach((orb, i) => {
           orb.angle += orb.speed;
-          const orbitX = width * 0.5 + Math.cos(orb.angle) * (width * 0.25) + (mouse.x - width * 0.5) * (0.04 * (i + 1));
-          const orbitY = height * 0.45 + Math.sin(orb.angle * 1.1) * (height * 0.2) + (mouse.y - height * 0.5) * (0.04 * (i + 1));
-          const currentR = orb.baseR + Math.sin(time * 0.001 + i) * 80;
+          const orbitX = width * 0.5 + Math.cos(orb.angle) * (width * 0.2);
+          const orbitY = height * 0.4 + Math.sin(orb.angle) * (height * 0.15);
+          const currentR = orb.baseR + Math.sin(time * 0.001 + i) * 60;
 
           const grad = ctx.createRadialGradient(orbitX, orbitY, 0, orbitX, orbitY, Math.max(10, currentR));
           grad.addColorStop(0, orb.color);
-          grad.addColorStop(0.5, orb.color.replace(/[\d\.]+\)$/, '0.03)'));
-          grad.addColorStop(1, 'rgba(8, 8, 10, 0)');
+          grad.addColorStop(1, 'rgba(10, 10, 15, 0)');
 
           ctx.fillStyle = grad;
           ctx.beginPath();
@@ -581,44 +422,8 @@
           ctx.fill();
         });
 
-        // 2. Partículas e linhas de conexão sutis
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          p.x += p.vx;
-          p.y += p.vy;
-
-          if (p.x < 0) p.x = width;
-          if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height;
-          if (p.y > height) p.y = 0;
-
-          ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-
-          for (let j = i + 1; j < particles.length; j++) {
-            const p2 = particles[j];
-            const dx = p.x - p2.x;
-            const dy = p.y - p2.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < 90) {
-              const lineAlpha = (1 - dist / 90) * 0.1;
-              ctx.strokeStyle = `rgba(255, 110, 0, ${lineAlpha})`;
-              ctx.lineWidth = 0.8;
-              ctx.beginPath();
-              ctx.moveTo(p.x, p.y);
-              ctx.lineTo(p2.x, p2.y);
-              ctx.stroke();
-            }
-          }
-        }
-
-        animationId = requestAnimationFrame(render);
+        requestAnimationFrame(render);
       }
-
-      resize();
       requestAnimationFrame(render);
     })();
   </script>
@@ -627,9 +432,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
-  <!-- Módulos da Aplicação Interativa -->
+  <!-- Scripts da Aplicação -->
   <script src="simulator3d.js"></script>
-  <script src="circuit.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

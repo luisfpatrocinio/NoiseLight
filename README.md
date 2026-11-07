@@ -73,10 +73,10 @@ NoiseLight/
 | Item | Componente | Quantidade | Função no Projeto |
 | :---: | :--- | :---: | :--- |
 | 🧠 | **ESP32 DevKit V1** (30 ou 38 pinos) | 1 | Microcontrolador (cérebro do sistema) |
-| 🎙️ | **Módulo Sensor de Som / Microfone** (KY-038 ou similar com saída digital D0) | 1 | Detecta as ondas sonoras e emite pulsos digitais |
-| 🟢 | **LED 5mm Verde** | 1 | Indicador de silêncio |
-| 🟡 | **LED 5mm Amarelo** | 1 | Indicador de atenção / ruído moderado |
-| 🔴 | **LED 5mm Vermelho** | 1 | Indicador de alarme / ruído alto |
+| 🎙️ | **Módulo Microfone Analógico MAX4466** (com ganho ajustável) | 1 | Captura as ondas sonoras e fornece sinal analógico de áudio |
+| 🟢 | **LED 10mm Verde** | 1 | Indicador de silêncio |
+| 🟡 | **LED 10mm Amarelo** | 1 | Indicador de atenção / ruído moderado |
+| 🔴 | **LED 10mm Vermelho** | 1 | Indicador de alarme / ruído alto |
 | ⚡ | **Resistores de 220 Ω ou 330 Ω** | 3 | Limitadores de corrente para proteger os LEDs |
 | 🪛 | **Protoboard (Matriz de Contatos)** | 1 | Base para conexões sem necessidade de solda |
 | 🔌 | **Cabos Jumpers (Macho-Macho e Macho-Fêmea)** | Vários | Fiação do circuito |
@@ -84,30 +84,34 @@ NoiseLight/
 
 ---
 
-## 🔌 Esquema de Ligação (Pinagem)
+## 🔌 Esquema de Ligação (Pinagem Otimizada - Lado Único da Protoboard)
+
+> 💡 **Dica de Bancada:** O ESP32 DevKit é largo para protoboards comuns. A pinagem abaixo está **100% concentrada na fileira do lado 3V3**, permitindo encaixar apenas um lado do ESP32 na protoboard e deixar a montagem limpa e funcional!
 
 | Componente | Pino do Componente | Conectar no ESP32 | Observação |
 | :--- | :--- | :--- | :--- |
-| **Sensor de Som** | `VCC` | `3V3` ou `VIN` (5V) | Alimentação do sensor |
-| **Sensor de Som** | `GND` | `GND` | Terra comum |
-| **Sensor de Som** | `D0` (Digital Out) | **GPIO 34** | Leitura dos pulsos digitais |
-| **LED Verde** | Ânodo (+) via resistor 220Ω | **GPIO 25** | Cátodo (-) vai ao `GND` |
-| **LED Amarelo** | Ânodo (+) via resistor 220Ω | **GPIO 26** | Cátodo (-) vai ao `GND` |
-| **LED Vermelho** | Ânodo (+) via resistor 220Ω | **GPIO 27** | Cátodo (-) vai ao `GND` |
+| **Microfone MAX4466** | `VCC` | **`3V3`** | Alimentação limpa de 3.3V |
+| **Microfone MAX4466** | `GND` | **`GND`** | Pino GND logo ao lado do 3V3 |
+| **Microfone MAX4466** | `OUT` (Áudio) | **`D4` (GPIO 4)** | Entrada analógica ADC2 do ESP32 |
+| **LED 10mm Verde** | Ânodo (+) via resistor 220Ω | **`D18` (GPIO 18)** | Cátodo (-) vai ao barramento `GND` |
+| **LED 10mm Amarelo** | Ânodo (+) via resistor 220Ω | **`D19` (GPIO 19)** | Cátodo (-) vai ao barramento `GND` |
+| **LED 10mm Vermelho** | Ânodo (+) via resistor 220Ω | **`D21` (GPIO 21)** | Cátodo (-) vai ao barramento `GND` |
 
-> ⚠️ **Dica de Eletrônica:** Lembre-se que o pino mais longo do LED é o positivo (Ânodo) e deve receber o resistor ligado ao pino do ESP32. O pino menor (Cátodo com corte chanfrado no corpo plástico) vai ligado no `GND` (negativo).
+> ⚠️ **Dica de Eletrônica (LEDs de 10mm):** O pino mais longo do LED é o positivo (Ânodo) e deve receber o resistor (220Ω ou 330Ω) ligado ao pino do ESP32. O pino menor (Cátodo) vai ligado no barramento `GND` (negativo). Os resistores protegem tanto os LEDs quanto as saídas GPIO do ESP32.
 
 ---
 
-## 🎛️ Calibrando o Sensor de Som
+## 🎛️ Calibrando o Módulo MAX4466
 
-Na plaquinha do sensor de som existe um **trimpot azul com parafuso** (potenciômetro miniatura):
+O módulo MAX4466 possui um pequeno **trimpot traseiro** que ajusta o ganho do amplificador (de 25x a 125x):
 
-1. Ligue o ESP32 na porta USB.
-2. Com uma chave de fenda pequena, gire delicadamente o parafuso:
-   * **Sentido horário ou anti-horário** até que o LED indicador do sensor (geralmente `L2` ou `OUT`) fique apagado em silêncio.
-   * Ao bater palmas ou falar perto do microfone, esse LED deve piscar momentaneamente.
-3. Se o LED ficar o tempo todo aceso ou nunca piscar, continue ajustando o trimpot até encontrar o ponto de equilíbrio para a acústica da sala.
+1. **Ajuste Inicial do Trimpot:** Deixe o trimpot na posição central (cerca de metade do curso).
+2. **Abra o Serial Plotter / Monitor:** No PlatformIO / VS Code, abra o monitor serial em **115200 baud** (ou o Serial Plotter).
+3. **Observação do Sinal:**
+   - Em silêncio, a amplitude deve oscilar entre **40 e 180**.
+   - Ao falar normalmente a 1 metro, a amplitude sobe para **400 ~ 1000**.
+   - Ao bater palmas ou falar alto, a amplitude ultrapassa **1200 ~ 2500+**.
+4. Se o microfone estiver muito sensível ou pouco sensível, ajuste o parafuso do trimpot traseiro com uma chave pequena e/ou ajuste as constantes `limiarAmarelo` e `limiarVermelho` no código.
 
 ---
 
