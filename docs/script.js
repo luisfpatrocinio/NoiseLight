@@ -1,7 +1,7 @@
 /**
  * script.js — Lógica Interativa do Projeto NoiseLight
- * Conceito: "Sensory Calm / Neuro-Inclusivo" para Feira de Ciências do 6º Ano A
- * Desenvolvido por alunos do 6º Ano A (InovaCEV) | Orientação: Prof. Luis Felipe Patrocinio
+ * Conceito: "Sensory Calm / Neuro-Inclusivo" + Recursos para Feira de Robótica
+ * Desenvolvido pelos alunos do 6º Ano A (Projeto InovaCEV) | Orientação: Prof. Luis Felipe Patrocinio
  */
 
 // =============================================================================
@@ -18,6 +18,7 @@
   let step = 0;
   let animationId = null;
   let isVisible = true;
+  let waveMode = 'calm'; // 'calm' | 'chaos'
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -38,12 +39,22 @@
     }
   });
 
-  // Configuração das camadas de ondas senoidais sálvia/azul sereno
-  const waveLayers = [
+  const calmLayers = [
     { amplitude: 45, frequency: 0.0035, speed: 0.015, color: 'rgba(163, 193, 173, 0.14)', yOffset: 0.85 },
     { amplitude: 35, frequency: 0.0050, speed: -0.018, color: 'rgba(186, 215, 201, 0.12)', yOffset: 0.88 },
     { amplitude: 55, frequency: 0.0025, speed: 0.010, color: 'rgba(215, 230, 222, 0.18)', yOffset: 0.92 }
   ];
+
+  const chaosLayers = [
+    { amplitude: 85, frequency: 0.014, speed: 0.085, color: 'rgba(239, 68, 68, 0.16)', yOffset: 0.72 },
+    { amplitude: 70, frequency: 0.020, speed: -0.095, color: 'rgba(245, 158, 11, 0.16)', yOffset: 0.78 },
+    { amplitude: 60, frequency: 0.026, speed: 0.110, color: 'rgba(239, 68, 68, 0.12)', yOffset: 0.84 },
+    { amplitude: 95, frequency: 0.010, speed: -0.065, color: 'rgba(245, 158, 11, 0.12)', yOffset: 0.88 }
+  ];
+
+  window.setWaveChaosMode = function (mode) {
+    waveMode = (mode === 'chaos') ? 'chaos' : 'calm';
+  };
 
   function render() {
     if (!isVisible) {
@@ -54,7 +65,9 @@
     ctx.clearRect(0, 0, width, height);
     step += 1;
 
-    waveLayers.forEach((w) => {
+    const layers = (waveMode === 'chaos') ? chaosLayers : calmLayers;
+
+    layers.forEach((w, idx) => {
       ctx.beginPath();
       ctx.fillStyle = w.color;
 
@@ -63,7 +76,10 @@
       ctx.lineTo(0, baseY);
 
       for (let x = 0; x <= width; x += 12) {
-        const y = baseY + Math.sin(x * w.frequency + step * w.speed) * w.amplitude;
+        const extra = (waveMode === 'chaos')
+          ? Math.sin(x * 0.032 - step * 0.12 + idx) * 24
+          : 0;
+        const y = baseY + Math.sin(x * w.frequency + step * w.speed) * w.amplitude + extra;
         ctx.lineTo(x, y);
       }
 
@@ -79,7 +95,7 @@
 })();
 
 // =============================================================================
-// 2. MAQUETE 3D DO SEMÁFORO MAKER (Three.js)
+// 2. MAQUETE 3D DO SEMÁFORO MAKER (Three.js) — MANTIDA INTACTA
 // =============================================================================
 class NoiseLight3D {
   constructor(canvasContainerId) {
@@ -91,7 +107,6 @@ class NoiseLight3D {
     this.renderer = null;
     this.controls = null;
 
-    // Componentes e Iluminações
     this.leds = { green: null, yellow: null, red: null };
     this.lights = { green: null, yellow: null, red: null };
     this.wiresGroup = null;
@@ -105,16 +120,13 @@ class NoiseLight3D {
   }
 
   init() {
-    // 1. Cena
     this.scene = new THREE.Scene();
 
-    // 2. Câmera
     const width = this.container.clientWidth || 800;
     const height = this.container.clientHeight || 460;
     this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     this.camera.position.set(0, 22, 34);
 
-    // 3. Renderer com fundo transparente integrado ao tema claro
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -122,7 +134,6 @@ class NoiseLight3D {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.container.appendChild(this.renderer.domElement);
 
-    // 4. OrbitControls
     if (typeof THREE.OrbitControls !== 'undefined') {
       this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
       this.controls.enableDamping = true;
@@ -133,7 +144,6 @@ class NoiseLight3D {
       this.controls.target.set(0, 3, 0);
     }
 
-    // 5. Iluminação Acolhedora de Sala de Aula (Luz do dia quente)
     const ambientLight = new THREE.AmbientLight(0xfffcf5, 1.25);
     this.scene.add(ambientLight);
 
@@ -148,19 +158,15 @@ class NoiseLight3D {
     softFillLight.position.set(-20, 18, -15);
     this.scene.add(softFillLight);
 
-    // 6. Construir a Maquete Maker da Feira de Ciências
     this.buildScene();
 
-    // 7. Eventos
     window.addEventListener('resize', () => this.onResize());
 
-    // 8. Loop de Animação
     this.animate = this.animate.bind(this);
     requestAnimationFrame(this.animate);
   }
 
   buildScene() {
-    // A. Mesa da Feira de Ciências (Madeira Clara Suave / MDF)
     const tableGeo = new THREE.CylinderGeometry(30, 32, 2, 64);
     const tableMat = new THREE.MeshStandardMaterial({
       color: 0xEDEBE4,
@@ -172,15 +178,12 @@ class NoiseLight3D {
     table.receiveShadow = true;
     this.scene.add(table);
 
-    // Linhas sutis de grid técnico na bancada
     const grid = new THREE.GridHelper(44, 44, 0xCBD5E1, 0xE2E8F0);
     grid.position.y = 0.02;
     this.scene.add(grid);
 
-    // B. Semáforo Maker (Papelão Kraft / MDF cortado a laser + Difusores de Ping-Pong)
     this.buildTrafficLightTower(4.5, 0, -2.5);
 
-    // C. Protoboard Educacional
     const protoWidth = 20;
     const protoLength = 15;
     const protoGeo = new THREE.BoxGeometry(protoWidth, 1.2, protoLength);
@@ -195,29 +198,21 @@ class NoiseLight3D {
     protoboard.receiveShadow = true;
     this.scene.add(protoboard);
 
-    // Barramento Negativo / GND (Azul)
     const railBlueGeo = new THREE.BoxGeometry(protoWidth - 2, 0.04, 0.25);
     const railBlueMat = new THREE.MeshBasicMaterial({ color: 0x3B82F6 });
     const railBlue = new THREE.Mesh(railBlueGeo, railBlueMat);
     railBlue.position.set(-5.5, 1.22, 2.5 + protoLength / 2 - 1.2);
     this.scene.add(railBlue);
 
-    // Barramento Positivo / 3V3 (Vermelho)
     const railRedMat = new THREE.MeshBasicMaterial({ color: 0xEF4444 });
     const railRed = new THREE.Mesh(railBlueGeo, railRedMat);
     railRed.position.set(-5.5, 1.22, 2.5 + protoLength / 2 - 1.7);
     this.scene.add(railRed);
 
-    // D. ESP32 DevKit V1 (Lado do 3V3 encaixado na protoboard)
     this.buildEsp32(-7.5, 1.2, 2.5);
-
-    // E. Módulo Microfone MAX4466 (com pré-amplificador e trimpot)
     this.buildMax4466(-1.5, 1.2, 2.5);
-
-    // F. Fiações / Cabos Jumpers
     this.buildJumperWires();
 
-    // Estado inicial
     this.setNoiseCount(5);
   }
 
@@ -225,7 +220,6 @@ class NoiseLight3D {
     const towerGroup = new THREE.Group();
     towerGroup.position.set(x, y, z);
 
-    // 1. Base do Semáforo (Madeira Clara / MDF)
     const baseGeo = new THREE.BoxGeometry(7, 0.8, 6);
     const woodMat = new THREE.MeshStandardMaterial({
       color: 0xE2C29D,
@@ -237,7 +231,6 @@ class NoiseLight3D {
     base.castShadow = true;
     towerGroup.add(base);
 
-    // 2. Haste / Poste do Semáforo
     const poleGeo = new THREE.CylinderGeometry(0.5, 0.5, 5, 24);
     const poleMat = new THREE.MeshStandardMaterial({ color: 0xD4A373, roughness: 0.8 });
     const pole = new THREE.Mesh(poleGeo, poleMat);
@@ -245,10 +238,9 @@ class NoiseLight3D {
     pole.castShadow = true;
     towerGroup.add(pole);
 
-    // 3. Gabinete do Semáforo (Papelão Kraft / MDF cortado a laser)
     const boxGeo = new THREE.BoxGeometry(4.2, 10.5, 3.2);
     const bodyMat = new THREE.MeshStandardMaterial({
-      color: 0xC89D7C, // Papelão Kraft / Madeira Cortada a Laser
+      color: 0xC89D7C,
       roughness: 0.85,
       metalness: 0.05
     });
@@ -257,14 +249,12 @@ class NoiseLight3D {
     body.castShadow = true;
     towerGroup.add(body);
 
-    // Placa de acabamento frontal da caixa
     const faceGeo = new THREE.BoxGeometry(3.9, 10.1, 0.15);
     const faceMat = new THREE.MeshStandardMaterial({ color: 0xB58764, roughness: 0.9 });
     const face = new THREE.Mesh(faceGeo, faceMat);
     face.position.set(0, 10, 1.62);
     towerGroup.add(face);
 
-    // 4. As 3 Luzes com Difusor de Bolinha de Ping-Pong Translúcida
     const lightConfigs = [
       { key: 'red', yOffset: 12.8, color: 0xEF4444 },
       { key: 'yellow', yOffset: 10.0, color: 0xF59E0B },
@@ -272,10 +262,8 @@ class NoiseLight3D {
     ];
 
     lightConfigs.forEach((cfg) => {
-      // Meia bolinha de ping-pong branca difusa
       const pingPongGeo = new THREE.SphereGeometry(1.05, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
 
-      // Material base: quando desligado parece bolinha de ping-pong de plástico branco fosco
       const mat = new THREE.MeshStandardMaterial({
         color: 0xF1F5F9,
         roughness: 0.35,
@@ -286,18 +274,16 @@ class NoiseLight3D {
       });
 
       const bulb = new THREE.Mesh(pingPongGeo, mat);
-      bulb.rotation.x = Math.PI / 2; // Apontando para a frente da caixa
+      bulb.rotation.x = Math.PI / 2;
       bulb.position.set(0, cfg.yOffset, 1.6);
       towerGroup.add(bulb);
 
-      // Aro de fixação em MDF / Papelão
       const bezelGeo = new THREE.TorusGeometry(1.15, 0.15, 16, 32);
       const bezelMat = new THREE.MeshStandardMaterial({ color: 0x8C5E3C, roughness: 0.8 });
       const bezel = new THREE.Mesh(bezelGeo, bezelMat);
       bezel.position.set(0, cfg.yOffset, 1.62);
       towerGroup.add(bezel);
 
-      // Luz pontual real que ilumina a sala
       const pointLight = new THREE.PointLight(cfg.color, 0, 15);
       pointLight.position.set(x, cfg.yOffset, z + 2.5);
       this.scene.add(pointLight);
@@ -313,14 +299,12 @@ class NoiseLight3D {
     const espGroup = new THREE.Group();
     espGroup.position.set(x, y, z);
 
-    // Placa PCB
     const pcbGeo = new THREE.BoxGeometry(5.4, 0.35, 10.5);
     const pcbMat = new THREE.MeshStandardMaterial({ color: 0x1E2923, roughness: 0.4 });
     const pcb = new THREE.Mesh(pcbGeo, pcbMat);
     pcb.castShadow = true;
     espGroup.add(pcb);
 
-    // Blindagem de metal do ESP-WROOM-32
     const shieldGeo = new THREE.BoxGeometry(4.2, 0.5, 5);
     const shieldMat = new THREE.MeshStandardMaterial({
       color: 0xD1D5DB,
@@ -332,14 +316,12 @@ class NoiseLight3D {
     shield.castShadow = true;
     espGroup.add(shield);
 
-    // Antena dourada
     const antGeo = new THREE.BoxGeometry(4.0, 0.08, 1.6);
     const antMat = new THREE.MeshStandardMaterial({ color: 0xD97706, metalness: 0.9, roughness: 0.2 });
     const antenna = new THREE.Mesh(antGeo, antMat);
     antenna.position.set(0, 0.22, -4.1);
     espGroup.add(antenna);
 
-    // Conector Micro-USB
     const usbGeo = new THREE.BoxGeometry(2.2, 1.1, 1.8);
     const usbMat = new THREE.MeshStandardMaterial({ color: 0x9CA3AF, metalness: 0.85, roughness: 0.2 });
     const usb = new THREE.Mesh(usbGeo, usbMat);
@@ -353,28 +335,24 @@ class NoiseLight3D {
     const sensorGroup = new THREE.Group();
     sensorGroup.position.set(x, y, z);
 
-    // PCB roxa/azul do MAX4466
     const pcbGeo = new THREE.BoxGeometry(3.4, 0.25, 3.6);
     const pcbMat = new THREE.MeshStandardMaterial({ color: 0x581C87, roughness: 0.4 });
     const pcb = new THREE.Mesh(pcbGeo, pcbMat);
     pcb.castShadow = true;
     sensorGroup.add(pcb);
 
-    // Cápsula de microfone de eletreto cilíndrica prateada
     const micGeo = new THREE.CylinderGeometry(0.9, 0.9, 0.95, 24);
     const micMat = new THREE.MeshStandardMaterial({ color: 0xD1D5DB, metalness: 0.85, roughness: 0.2 });
     const mic = new THREE.Mesh(micGeo, micMat);
     mic.position.set(0, 0.55, 0.6);
     sensorGroup.add(mic);
 
-    // Feltro preto acústico no microfone
     const micTopGeo = new THREE.CylinderGeometry(0.8, 0.8, 0.08, 24);
     const micTopMat = new THREE.MeshBasicMaterial({ color: 0x18181B });
     const micTop = new THREE.Mesh(micTopGeo, micTopMat);
     micTop.position.set(0, 1.05, 0.6);
     sensorGroup.add(micTop);
 
-    // Trimpot dourado de ganho atrás da plaquinha
     const trimGeo = new THREE.BoxGeometry(0.9, 0.5, 0.9);
     const trimMat = new THREE.MeshStandardMaterial({ color: 0xD97706, metalness: 0.7 });
     const trimpot = new THREE.Mesh(trimGeo, trimMat);
@@ -387,19 +365,12 @@ class NoiseLight3D {
   buildJumperWires() {
     this.wiresGroup = new THREE.Group();
 
-    // Conexões de cabos jumpers com curvas Bezier
     const wiresData = [
-      // 1. Vermelho: 3V3 ESP32 -> VCC MAX4466
       { start: [-5.0, 1.4, 0.5], end: [-1.5, 1.3, 4.0], color: 0xEF4444, height: 3.5 },
-      // 2. Preto: GND ESP32 -> GND MAX4466
       { start: [-5.0, 1.4, 1.2], end: [-1.5, 1.3, 4.0], color: 0x374151, height: 3.0 },
-      // 3. Laranja: D4 ESP32 -> OUT MAX4466
       { start: [-5.0, 1.4, 2.6], end: [-0.7, 1.3, 4.0], color: 0xF97316, height: 4.0 },
-      // 4. Verde: D18 ESP32 -> Semáforo LED Verde
       { start: [-5.0, 1.4, 4.7], end: [3.2, 7.2, -1.0], color: 0x10B981, height: 5.5 },
-      // 5. Amarelo: D19 ESP32 -> Semáforo LED Amarelo
       { start: [-5.0, 1.4, 5.4], end: [3.2, 10.0, -1.0], color: 0xF59E0B, height: 6.5 },
-      // 6. Roxo: D21 ESP32 -> Semáforo LED Vermelho
       { start: [-5.0, 1.4, 6.1], end: [3.2, 12.8, -1.0], color: 0x8B5CF6, height: 7.5 }
     ];
 
@@ -447,10 +418,6 @@ class NoiseLight3D {
   setNoiseCount(count) {
     this.currentNoise = count;
 
-    // Regras de Transição de Cores do Semáforo:
-    // < 15: Verde Sereno (Silêncio)
-    // 15 a 45: Amarelo Âmbar (Atenção / Grupo)
-    // 46+: Vermelho Coral (Alerta Crítico / Pisca)
     if (count < 15) {
       this.setLedState('green', true);
       this.setLedState('yellow', false);
@@ -474,14 +441,12 @@ class NoiseLight3D {
     if (!mat || !light) return;
 
     if (state) {
-      // Quando aceso, a bolinha de ping-pong ganha cor emissiva pura e forte
       const hexColor = (color === 'green') ? 0x10B981 : (color === 'yellow') ? 0xF59E0B : 0xEF4444;
       mat.color.setHex(hexColor);
       mat.emissive.setHex(hexColor);
       mat.emissiveIntensity = 1.45;
       light.intensity = 3.2;
     } else {
-      // Quando apagado, volta a ser o difusor de plástico branco translúcido
       mat.color.setHex(0xF1F5F9);
       mat.emissive.setHex(0x000000);
       mat.emissiveIntensity = 0;
@@ -496,7 +461,6 @@ class NoiseLight3D {
       this.controls.update();
     }
 
-    // Efeito estroboscópico de alerta no LED Vermelho
     if (this.isBlinking) {
       this.blinkCounter = (this.blinkCounter + 1) % 20;
       const shouldLight = this.blinkCounter < 10;
@@ -509,7 +473,7 @@ class NoiseLight3D {
   onResize() {
     if (!this.container || !this.renderer || !this.camera) return;
     const width = this.container.clientWidth;
-    const height = this.container.clientHeight || 460;
+    const height = this.container.clientHeight || 360;
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height);
@@ -517,25 +481,43 @@ class NoiseLight3D {
 }
 
 // =============================================================================
-// 3. CONTROLADOR GERAL (Web Audio API, Presets, Abas de Código)
+// 3. CONTROLADOR GERAL (Web Audio API, Calibração da Feira, Modo Estande, TEA)
 // =============================================================================
 document.addEventListener('DOMContentLoaded', () => {
   const sim3d = new NoiseLight3D('canvas-3d-box');
 
   let currentNoise = 5;
+  let fairOffset = 0;
   let isListeningMic = false;
   let audioContext = null;
   let analyser = null;
   let micStream = null;
 
   // Elementos do DOM
+  const viewportBox = document.getElementById('canvas-3d-box');
   const slider = document.getElementById('noise-slider');
   const noiseValueDisplay = document.getElementById('noise-val');
+  const fairOffsetSlider = document.getElementById('fair-offset-slider');
+  const fairOffsetDisplay = document.getElementById('fair-offset-val');
   const statusBadge = document.getElementById('status-badge');
   const statusDesc = document.getElementById('status-desc');
   const btnMic = document.getElementById('btn-mic');
   const btnToggleWires = document.getElementById('btn-toggle-wires');
   const presetBtns = document.querySelectorAll('.btn-preset');
+
+  // Modo Estande (Tela Cheia)
+  const btnStandMode = document.getElementById('btn-stand-mode');
+  const section3d = document.getElementById('secao-3d');
+
+  // Experiência TEA
+  const btnTeaExp = document.getElementById('btn-tea-experience');
+  const teaOverlay = document.getElementById('tea-overlay');
+  const teaModal = document.getElementById('tea-modal');
+  const teaBadge = document.getElementById('tea-modal-badge');
+  const teaTitle = document.getElementById('tea-modal-title');
+  const teaContent = document.getElementById('tea-dynamic-content');
+  const teaProgress = document.getElementById('tea-progress-bar');
+  const btnTeaClose = document.getElementById('btn-tea-close');
 
   // Abas do Código
   const codeTabs = document.querySelectorAll('.code-tab-btn');
@@ -544,41 +526,66 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCopyCode = document.getElementById('btn-copy-code');
 
   function updateNoiseLevel(value, source = 'slider') {
-    currentNoise = parseInt(value, 10);
-    if (isNaN(currentNoise)) currentNoise = 0;
+    let parsed = parseInt(value, 10);
+    if (isNaN(parsed)) parsed = 0;
+
+    // Quando vem do Microfone Real, aplica o Offset de Calibração do Ruído da Feira
+    if (source === 'mic') {
+      currentNoise = Math.max(0, Math.min(70, parsed - fairOffset));
+    } else {
+      currentNoise = Math.max(0, Math.min(70, parsed));
+    }
 
     if (source !== 'slider' && slider) {
       slider.value = currentNoise;
     }
     if (noiseValueDisplay) {
-      noiseValueDisplay.innerText = currentNoise;
+      const approxDb = 42 + Math.round(currentNoise * 0.65);
+      noiseValueDisplay.innerText = `${approxDb} dB (nível ${currentNoise})`;
     }
 
     if (sim3d) {
       sim3d.setNoiseCount(currentNoise);
     }
 
-    // Atualiza status e textos informativos
+    // Atualiza Status Badge e Auréola Visual Dinâmica
+    if (viewportBox) {
+      viewportBox.classList.remove('halo-green', 'halo-yellow', 'halo-red');
+    }
+
     if (currentNoise < 15) {
       statusBadge.innerHTML = '🟢 Silêncio (Conforto Acústico)';
       statusBadge.className = 'overlay-status status-green';
       statusDesc.innerText = 'Volume calmo e seguro (< 60 dB). Ideal para concentração, leitura e bem-estar sensorial.';
+      if (viewportBox) viewportBox.classList.add('halo-green');
     } else if (currentNoise >= 15 && currentNoise < 46) {
       statusBadge.innerHTML = '🟡 Atenção (Conversas)';
       statusBadge.className = 'overlay-status status-yellow';
       statusDesc.innerText = 'Trabalho em grupo (60 a 70 dB). Ponto de equilíbrio para que todos conversem sem elevar a voz.';
+      if (viewportBox) viewportBox.classList.add('halo-yellow');
     } else {
       statusBadge.innerHTML = '🔴 Alerta (Sobrecarga Sonora)';
       statusBadge.className = 'overlay-status status-red';
       statusDesc.innerText = 'Barulho excessivo (> 70 dB). Risco de sobrecarga sensorial para colegas atípicos. O LED pisca!';
+      if (viewportBox) viewportBox.classList.add('halo-red');
     }
   }
 
-  // Slider
+  // Slider Manual de Ruído
   if (slider) {
     slider.addEventListener('input', (e) => {
       presetBtns.forEach(b => b.classList.remove('active'));
       updateNoiseLevel(e.target.value, 'slider');
+    });
+  }
+
+  // Slider de Calibração de Ruído da Feira (Offset)
+  if (fairOffsetSlider) {
+    fairOffsetSlider.addEventListener('input', (e) => {
+      fairOffset = parseInt(e.target.value, 10) || 0;
+      if (fairOffsetDisplay) {
+        fairOffsetDisplay.innerText = `+${fairOffset} pts`;
+      }
     });
   }
 
@@ -679,16 +686,157 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const average = sum / dataArray.length;
 
-    let simulatedNoise = 0;
-    if (average > 8) {
-      simulatedNoise = Math.min(70, Math.floor((average - 8) * 1.35));
+    // Escala ampliada até 115 para comportar a subtração do fairOffset (até 45) em ginásio barulhento
+    let rawSimulated = 0;
+    if (average > 6) {
+      rawSimulated = Math.min(115, Math.floor((average - 6) * 1.65));
     }
 
-    updateNoiseLevel(simulatedNoise, 'mic');
+    updateNoiseLevel(rawSimulated, 'mic');
     requestAnimationFrame(listenAudioLoop);
   }
 
-  // Base de Código do ESP32
+  // ===========================================================================
+  // 4. MODO ESTANDE (TELA CHEIA) & RETORNO AUTOMÁTICO POR INATIVIDADE (45s)
+  // ===========================================================================
+  if (btnStandMode) {
+    btnStandMode.addEventListener('click', async () => {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+          if (section3d) {
+            section3d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (err) {
+        console.warn('Fullscreen não disponível:', err);
+      }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+      if (document.fullscreenElement) {
+        btnStandMode.classList.add('active');
+        btnStandMode.innerHTML = '📺 Sair do Modo Estande';
+      } else {
+        btnStandMode.classList.remove('active');
+        btnStandMode.innerHTML = '📺 Modo Estande (Tela Cheia)';
+      }
+      if (sim3d) {
+        setTimeout(() => sim3d.onResize(), 200);
+      }
+    });
+  }
+
+  // Retorno automático ao Simulador 3D após 45s de inatividade (apenas Desktop >= 1024px)
+  let inactivityTimer = null;
+  function resetInactivityTimer() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    if (window.innerWidth < 1024) return;
+
+    inactivityTimer = setTimeout(() => {
+      if (window.innerWidth >= 1024 && section3d) {
+        const rect = section3d.getBoundingClientRect();
+        const isOutOfView = rect.top < -120 || rect.top > window.innerHeight * 0.6;
+        if (isOutOfView) {
+          section3d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    }, 45000);
+  }
+
+  ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'].forEach(evt => {
+    window.addEventListener(evt, resetInactivityTimer, { passive: true });
+  });
+  resetInactivityTimer();
+
+  // ===========================================================================
+  // 5. EXPERIÊNCIA "🎧 SENTIR NA PELE (PERSPECTIVA TEA)" (6 SEGUNDOS)
+  // ===========================================================================
+  let teaTimers = [];
+
+  function clearTeaTimers() {
+    teaTimers.forEach(id => clearTimeout(id));
+    teaTimers = [];
+  }
+
+  function closeTeaExperience() {
+    clearTeaTimers();
+    if (teaOverlay) teaOverlay.classList.remove('active');
+    if (window.setWaveChaosMode) window.setWaveChaosMode('calm');
+  }
+
+  if (btnTeaExp && teaOverlay) {
+    btnTeaExp.addEventListener('click', () => {
+      clearTeaTimers();
+
+      // Fase 1: Sobrecarga Sensorial (0s -> 6s)
+      teaModal.classList.remove('phase-calm');
+      teaModal.classList.add('phase-overload');
+      teaBadge.innerText = '⚠️ Sobrecarga Auditiva (6 segundos)';
+      teaTitle.innerText = 'Como múltiplos ruídos fragmentam o foco';
+      teaProgress.style.width = '0%';
+      teaContent.innerHTML = `
+        <div class="noise-fragment-chip">🪑 Cadeira arrastando (74 dB)</div>
+      `;
+
+      teaOverlay.classList.add('active');
+      if (window.setWaveChaosMode) window.setWaveChaosMode('chaos');
+
+      // Animação progressiva dos estímulos simultâneos durante 6 segundos
+      const steps = [
+        { delay: 900, pct: '20%', html: '<div class="noise-fragment-chip">🗣️ 5 conversas cruzadas ao mesmo tempo</div>' },
+        { delay: 2000, pct: '42%', html: '<div class="noise-fragment-chip">✏️ Estojo caindo no chão (81 dB!)</div>' },
+        { delay: 3200, pct: '66%', html: '<div class="noise-fragment-chip">📢 Eco nas paredes da sala de aula</div>' },
+        { delay: 4400, pct: '85%', html: '<div class="noise-fragment-chip">🧠 Cérebro sobrecarregado: impossível ler ou focar</div>' }
+      ];
+
+      steps.forEach(st => {
+        teaTimers.push(setTimeout(() => {
+          teaProgress.style.width = st.pct;
+          teaContent.insertAdjacentHTML('beforeend', st.html);
+        }, st.delay));
+      });
+
+      // Fase 2: Atuação do Semáforo do Barulho (aos 6s -> restaura calma visual)
+      teaTimers.push(setTimeout(() => {
+        teaProgress.style.width = '100%';
+        teaModal.classList.remove('phase-overload');
+        teaModal.classList.add('phase-calm');
+        teaBadge.innerText = '🟢 Semáforo do Barulho em Ação';
+        teaTitle.innerText = 'A calma visual retorna sem nenhum grito';
+        if (window.setWaveChaosMode) window.setWaveChaosMode('calm');
+
+        // Atualiza a maquete 3D para verde silencioso
+        presetBtns.forEach(b => b.classList.remove('active'));
+        if (presetBtns[0]) presetBtns[0].classList.add('active');
+        updateNoiseLevel(5, 'preset');
+
+        teaContent.innerHTML = `
+          <div class="tea-calm-message">
+            🚦 O Semáforo acendeu o alerta visual e toda a turma reduziu o volume.<br>
+            <span style="font-weight:400; font-size:0.88rem; display:block; margin-top:0.4rem;">
+              O conforto acústico voltou, a mente respira aliviada e todos conseguem aprender juntos.
+            </span>
+          </div>
+        `;
+      }, 6000));
+    });
+  }
+
+  if (btnTeaClose) {
+    btnTeaClose.addEventListener('click', closeTeaExperience);
+  }
+  if (teaOverlay) {
+    teaOverlay.addEventListener('click', (e) => {
+      if (e.target === teaOverlay) closeTeaExperience();
+    });
+  }
+
+  // ===========================================================================
+  // 6. ABAS INTERATIVAS DO CÓDIGO-FONTE
+  // ===========================================================================
   const codeDatabase = {
     complete: {
       code: `// --- CÓDIGO COMPLETO DO FIRMWARE (src/main.cpp) ---
@@ -796,7 +944,6 @@ void alertarVermelhoPiscando() {
     });
   });
 
-  // Copiar Código
   if (btnCopyCode) {
     btnCopyCode.addEventListener('click', () => {
       const tempElement = document.createElement('textarea');
@@ -814,6 +961,5 @@ void alertarVermelhoPiscando() {
     });
   }
 
-  // Inicializa o som padrão
   updateNoiseLevel(5, 'init');
 });

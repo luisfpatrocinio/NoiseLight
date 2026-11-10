@@ -19,27 +19,38 @@
   <!-- Canvas Dinâmico de Fundo (Ondas Acústicas Senoidais Orgânicas) -->
   <canvas id="bg-canvas"></canvas>
 
+  <!-- Barra Unificada no Topo -->
+  <div class="top-announcement-bar">
+    <span>🚀 Mostra de Robótica &amp; Inclusão InovaCEV — 6º Ano | Orientação: Prof. Luis Felipe Patrocinio</span>
+  </div>
+
   <!-- Barra de Navegação Superior -->
   <header>
     <div class="nav-container">
       <a href="#" class="brand">
         <div class="brand-icon-wrap">🚦</div>
         <span>NoiseLight</span>
-        <span class="brand-badge">Feira de Robótica &bull; 6º Ano A</span>
+        <span class="brand-badge">6º Ano A</span>
       </a>
       <ul class="nav-links">
-        <li><a href="#secao-empatia">1. Por Que o Silêncio?</a></li>
-        <li><a href="#secao-3d">2. Maquete 3D</a></li>
-        <li><a href="#secao-jornada">3. A Jornada do Som</a></li>
-        <li><a href="#secao-montagem">4. Fiações &amp; Montagem</a></li>
-        <li><a href="#secao-codigo">5. Código</a></li>
+        <li><a href="#secao-empatia">Empatia</a></li>
+        <li><a href="#secao-3d">Maquete 3D</a></li>
+        <li><a href="#secao-jornada">Jornada do Som</a></li>
+        <li><a href="#secao-montagem">Montagem</a></li>
+        <li><a href="#secao-codigo">Código</a></li>
+        <li><a href="#secao-startup">Equipe</a></li>
       </ul>
-      <a href="https://github.com/luisfpatrocinio/NoiseLight" target="_blank" rel="noopener noreferrer" class="btn-github">
-        <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-        </svg>
-        GitHub
-      </a>
+      <div class="header-actions">
+        <button type="button" class="btn-stand-mode desktop-only" id="btn-stand-mode" title="Ativar modo apresentação para o estande da feira">
+          📺 Modo Estande (Tela Cheia)
+        </button>
+        <a href="https://github.com/luisfpatrocinio/NoiseLight" target="_blank" rel="noopener noreferrer" class="btn-github">
+          <svg height="16" width="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+          </svg>
+          GitHub
+        </a>
+      </div>
     </div>
   </header>
 
@@ -72,7 +83,7 @@
 
   <main>
     <!-- ======================================================== -->
-    <!-- NOVA SEÇÃO A: EMPATIA EM PRIMEIRO LUGAR                  -->
+    <!-- SEÇÃO A: EMPATIA EM PRIMEIRO LUGAR                       -->
     <!-- ======================================================== -->
     <section id="secao-empatia" class="section-card">
       <div class="section-header">
@@ -91,7 +102,7 @@
           <div class="empathy-icon-box empathy-icon-autism">💙</div>
           <h3>Sobrecarga Sensorial (TEA / Autismo)</h3>
           <p>
-            Para colegas no espectro autista, o excesso de ruído na sala de aula não é apenas um incômodo passageiro: ele é processado pelo cérebro como dor física e estresse extremo, podendo desencadear crises de sobrecarga sensorial (*meltdowns*). O semáforo ajuda a turma a manter o som em um nível seguro para todos.
+            Para colegas no espectro autista, o excesso de ruído na sala de aula não é apenas um incômodo passageiro: ele é processado pelo cérebro como dor física e estresse extremo, podendo desencadear crises de sobrecarga sensorial (<em>meltdowns</em>). O semáforo ajuda a turma a manter o som em um nível seguro para todos.
           </p>
           <div class="empathy-quote">
             "Um ambiente acusticamente calmo é um direito de todos e um ato de respeito."
@@ -122,6 +133,19 @@
           </div>
         </div>
       </div>
+
+      <!-- Experiência Interativa "Sentir na Pele (Perspectiva TEA)" -->
+      <div class="tea-experience-banner">
+        <div class="tea-banner-info">
+          <h4>🎧 Experiência Imersiva: Sentir na Pele (Perspectiva TEA)</h4>
+          <p>
+            Quer entender como múltiplos sons simultâneos fragmentam o foco durante uma aula barulhenta e como o Semáforo do Barulho ajuda a restaurar a calma? Teste nossa simulação guiada de 6 segundos.
+          </p>
+        </div>
+        <button type="button" class="btn-tea-experience" id="btn-tea-experience">
+          🎧 Sentir na Pele (Perspectiva TEA)
+        </button>
+      </div>
     </section>
 
     <!-- ======================================================== -->
@@ -139,8 +163,8 @@
       </div>
 
       <div class="sim-grid">
-        <!-- Visualizador Three.js -->
-        <div class="viewport-3d-wrapper" id="canvas-3d-box">
+        <!-- Visualizador Three.js com Auréola Dinâmica -->
+        <div class="viewport-3d-wrapper halo-green" id="canvas-3d-box">
           <div class="viewport-overlay">
             <div class="overlay-status status-green" id="status-badge">🟢 Silêncio (Conforto Acústico)</div>
             <div style="font-size: 0.8rem; color: #526358; max-width: 320px; line-height: 1.45;" id="status-desc">
@@ -157,8 +181,8 @@
           <!-- Toggle de Fiações -->
           <div class="control-group">
             <label class="control-label">Fiação e Montagem:</label>
-            <button class="btn-wires active" id="btn-toggle-wires">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button type="button" class="btn-wires active" id="btn-toggle-wires">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -171,34 +195,46 @@
           <div class="control-group">
             <div class="control-label">
               <span>Nível de Som Estimado:</span>
-              <span class="control-value" id="noise-val">5 dB</span>
+              <span class="control-value" id="noise-val">45 dB (nível 5)</span>
             </div>
-            <input type="range" id="noise-slider" min="0" max="70" value="5">
+            <input type="range" id="noise-slider" min="0" max="70" value="5" aria-label="Nível de Som Estimado">
           </div>
 
           <!-- Cenários da Sala de Aula -->
           <div class="control-group">
             <label class="control-label">Simular Situações em Sala:</label>
             <div class="preset-buttons">
-              <button class="btn-preset active" data-value="5">
+              <button type="button" class="btn-preset active" data-value="5">
                 <span>🤫 Prova / Concentração</span>
                 <small>Silêncio (Verde)</small>
               </button>
-              <button class="btn-preset" data-value="28">
+              <button type="button" class="btn-preset" data-value="28">
                 <span>👥 Trabalho em Grupo</span>
                 <small>Atenção (Amarelo)</small>
               </button>
-              <button class="btn-preset" data-value="60">
+              <button type="button" class="btn-preset" data-value="60">
                 <span>📢 Recreio / Gritaria</span>
                 <small>Alerta (Vermelho)</small>
               </button>
             </div>
           </div>
 
+          <!-- Slider de Calibração de Ruído da Feira (Offset) -->
+          <div class="fair-calibration-box">
+            <div class="control-label">
+              <label for="fair-offset-slider">🎛️ Calibrar Ruído Ambiente da Feira (Offset)</label>
+              <span class="control-value" id="fair-offset-val">+0 pts</span>
+            </div>
+            <input type="range" id="fair-offset-slider" min="0" max="45" value="0" aria-label="Calibrar Ruído Ambiente da Feira">
+            <p class="fair-calibration-hint">
+              Em ginásios barulhentos (~75 dB), aumente este controle para que o som ambiente fique no Verde, a fala próxima fique Amarela e palmas acionem o Vermelho.
+            </p>
+          </div>
+
           <!-- Teste com Microfone Real do Visitante -->
           <div class="control-group">
-            <button class="btn-mic" id="btn-mic">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button type="button" class="btn-mic" id="btn-mic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
                 <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                 <line x1="12" y1="19" x2="12" y2="22"></line>
@@ -214,7 +250,7 @@
     </section>
 
     <!-- ======================================================== -->
-    <!-- NOVA SEÇÃO B: POR DEBAIXO DO CAPÔ (JORNADA DA ONDA)      -->
+    <!-- SEÇÃO B: POR DEBAIXO DO CAPÔ (JORNADA DA ONDA SONORA)    -->
     <!-- ======================================================== -->
     <section id="secao-jornada" class="section-card">
       <div class="section-header">
@@ -236,8 +272,15 @@
             Quando conversamos, nossas cordas vocais fazem as moléculas de ar se comprimirem e se expandirem em ondas esféricas de pressão acústica invisíveis, viajando a cerca de 340 metros por segundo pela sala de aula.
           </p>
           <div class="journey-formula">
-            Onda Mecânica &rarr; Pressão ($\Delta P$)
+            Onda Mecânica &rarr; Variação de Pressão (&Delta;P)
           </div>
+        </div>
+
+        <div class="journey-arrow" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
         </div>
 
         <!-- Passo 2 -->
@@ -245,11 +288,18 @@
           <div class="journey-badge">Passo 2 &bull; O Transdutor</div>
           <h3>Módulo MAX4466</h3>
           <p>
-            A membrana do microfone de eletreto vibra com a pressão do ar. O circuito pré-amplificador do MAX4466 transforma esse movimento mecânico em uma tensão elétrica contínua que oscila suavemente entre 0V e 3.3V (com centro em 1.65V).
+            A membrana do microfone de eletreto vibra com a pressão do ar. O circuito pré-amplificador do MAX4466 transforma esse movimento em uma onda elétrica contínua entre 0V e 3.3V (oscilando em torno de 1.65V / leitura ~2048).
           </p>
           <div class="journey-formula">
-            Transdução: Sinal Analógico (0 a 3.3V)
+            Transdução: Sinal Analógico (0V a 3.3V)
           </div>
+        </div>
+
+        <div class="journey-arrow" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
         </div>
 
         <!-- Passo 3 -->
@@ -257,10 +307,10 @@
           <div class="journey-badge">Passo 3 &bull; A Matemática</div>
           <h3>Janela de 50ms no ESP32</h3>
           <p>
-            Como as ondas sonoras vibram centenas de vezes por segundo, o conversor ADC do ESP32 (GPIO 4) tira milhares de "fotos" por segundo. Em uma janela de 50ms, ele calcula a amplitude Pico a Pico ($V_{\text{máx}} - V_{\text{mín}}$) e aciona os pinos digitais dos LEDs.
+            Como o som sobe e desce rápido demais, o pino ADC (GPIO 4 / GPIO 34) tira milhares de "fotos" durante 50 milissegundos, captura a amplitude máxima (Pico a Pico) e aciona os pinos digitais dos LEDs.
           </p>
           <div class="journey-formula">
-            $\text{Amplitude} = \text{Pico Máx} - \text{Pico Mín}$
+            Amplitude = V<sub>máx</sub> &minus; V<sub>mín</sub>
           </div>
         </div>
       </div>
@@ -325,7 +375,7 @@
             <span>Pino D4 (GPIO 4)</span>
           </div>
           <p class="wiring-desc">
-            Envia o sinal acústico em tempo real para a entrada analógica ADC2 do microprocessador do ESP32.
+            Envia o sinal acústico em tempo real para a entrada analógica ADC do microprocessador do ESP32.
           </p>
         </div>
 
@@ -338,10 +388,10 @@
           <div class="wiring-pin-route">
             <span>Pino D18 (GPIO 18)</span>
             <span>&rarr;</span>
-            <span>Resistor 220Ω &rarr; LED</span>
+            <span>Resistor 220&Omega; &rarr; LED</span>
           </div>
           <p class="wiring-desc">
-            Sinaliza ambiente tranquilo. O resistor de 220Ω protege o pino do ESP32 e mantém a corrente em ~6mA.
+            Sinaliza ambiente tranquilo. O resistor de 220&Omega; protege o pino do ESP32 e mantém a corrente em ~6mA.
           </p>
         </div>
 
@@ -354,7 +404,7 @@
           <div class="wiring-pin-route">
             <span>Pino D19 (GPIO 19)</span>
             <span>&rarr;</span>
-            <span>Resistor 220Ω &rarr; LED</span>
+            <span>Resistor 220&Omega; &rarr; LED</span>
           </div>
           <p class="wiring-desc">
             Alerta visual suave para conversas em grupo, avisando a turma antes que o volume suba demais.
@@ -370,7 +420,7 @@
           <div class="wiring-pin-route">
             <span>Pino D21 (GPIO 21)</span>
             <span>&rarr;</span>
-            <span>Resistor 220Ω &rarr; LED</span>
+            <span>Resistor 220&Omega; &rarr; LED</span>
           </div>
           <p class="wiring-desc">
             Acionado quando o som atinge o limiar crítico. Pisca em alerta estroboscópico com retenção de 1,5s.
@@ -381,7 +431,7 @@
       <div class="concept-box">
         <h4>💡 A Lei de Ohm Explicada para o 6º Ano</h4>
         <p>
-          O ESP32 fornece <strong>3.3 Volts</strong>, mas cada LED precisa de apenas cerca de <strong>2.0 Volts</strong>. Se ligássemos o LED direto, a corrente elétrica seria tão alta que queimaria o componente em frações de segundo. O resistor de <strong>220 Ohms</strong> funciona como um redutor de velocidade, mantendo a corrente segura em aproximadamente 6 miliamperes ($I = V / R$).
+          O ESP32 fornece <strong>3.3 Volts</strong>, mas cada LED precisa de apenas cerca de <strong>2.0 Volts</strong>. Se ligássemos o LED direto, a corrente elétrica seria tão alta que queimaria o componente em frações de segundo. O resistor de <strong>220 Ohms</strong> funciona como um redutor de velocidade, mantendo a corrente segura em aproximadamente 6 miliamperes (<em>I = V / R</em>).
         </p>
       </div>
     </section>
@@ -402,30 +452,30 @@
 
       <!-- Abas de Navegação do Código -->
       <div class="code-tabs-bar">
-        <button class="code-tab-btn active" data-snippet="complete">
+        <button type="button" class="code-tab-btn active" data-snippet="complete">
           📜 Código Completo
         </button>
-        <button class="code-tab-btn" data-snippet="sampling">
-          🎙️ 1. Leitura do MAX4466 (Peak-to-Peak)
+        <button type="button" class="code-tab-btn" data-snippet="sampling">
+          🎙️ 1. Leitura MAX4466
         </button>
-        <button class="code-tab-btn" data-snippet="decision">
-          🚦 2. Lógica do Semáforo
+        <button type="button" class="code-tab-btn" data-snippet="decision">
+          🚦 2. Lógica Semáforo
         </button>
-        <button class="code-tab-btn" data-snippet="nonblocking">
-          🚨 3. Piscar sem Travar (millis)
+        <button type="button" class="code-tab-btn" data-snippet="nonblocking">
+          🚨 3. Piscar (millis)
         </button>
       </div>
 
       <!-- Visualizador de Código -->
       <div class="code-viewer-container">
         <div class="code-viewer-header">
-          <div class="window-dots">
+          <div class="window-dots" aria-hidden="true">
             <span></span>
             <span></span>
             <span></span>
           </div>
           <span>src/main.cpp &bull; C++ / PlatformIO</span>
-          <button class="btn-copy-code" id="btn-copy-code">📋 Copiar Código</button>
+          <button type="button" class="btn-copy-code" id="btn-copy-code">📋 Copiar Código</button>
         </div>
 
         <pre class="code-content"><code id="code-display">// --- CÓDIGO COMPLETO DO FIRMWARE (src/main.cpp) ---
@@ -463,7 +513,127 @@ void loop() {
         </div>
       </div>
     </section>
+
+    <!-- ======================================================== -->
+    <!-- SEÇÃO OFICIAL: QUEM FAZ ACONTECER (STARTUP - 6º ANO A)   -->
+    <!-- ======================================================== -->
+    <section id="secao-startup" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Nossa Startup Escolar</span>
+          <h2 class="section-title">🌟 Quem Faz Acontecer (Nossa Startup - 6º Ano A)</h2>
+          <p class="section-desc">
+            O NoiseLight é fruto do trabalho colaborativo de toda a turma do 6º Ano A, dividida em departamentos reais de uma startup de impacto social:
+          </p>
+        </div>
+      </div>
+
+      <div class="startup-grid">
+        <!-- Marketing -->
+        <div class="startup-dept-card">
+          <div class="startup-dept-title">📸 Marketing</div>
+          <div class="startup-members">
+            <span class="member-pill">Agnes</span>
+            <span class="member-pill">Bianca</span>
+            <span class="member-pill">Carolina</span>
+            <span class="member-pill">Davi</span>
+            <span class="member-pill">Gisele</span>
+            <span class="member-pill">Maria Letícia</span>
+            <span class="member-pill">Maysa</span>
+          </div>
+        </div>
+
+        <!-- Tecnologia -->
+        <div class="startup-dept-card">
+          <div class="startup-dept-title">💻 Tecnologia</div>
+          <div class="startup-members">
+            <span class="member-pill">Théo</span>
+            <span class="member-pill">Ícaro</span>
+            <span class="member-pill">Lucas Alves</span>
+            <span class="member-pill">Maria Alice</span>
+            <span class="member-pill">Yan</span>
+          </div>
+        </div>
+
+        <!-- Design -->
+        <div class="startup-dept-card">
+          <div class="startup-dept-title">🎨 Design</div>
+          <div class="startup-members">
+            <span class="member-pill">Ana Clara</span>
+            <span class="member-pill">Arthur Fernandes</span>
+            <span class="member-pill">Caio</span>
+            <span class="member-pill">Heitor</span>
+            <span class="member-pill">João Marcelo</span>
+            <span class="member-pill">Lucas Gabriel</span>
+            <span class="member-pill">Maria Luíza</span>
+            <span class="member-pill">Mariana</span>
+            <span class="member-pill">Rayana</span>
+            <span class="member-pill">Teodora</span>
+            <span class="member-pill">Ellie</span>
+          </div>
+        </div>
+
+        <!-- Montagem -->
+        <div class="startup-dept-card">
+          <div class="startup-dept-title">🛠️ Montagem</div>
+          <div class="startup-members">
+            <span class="member-pill">Antônio</span>
+            <span class="member-pill">Arthur Samitrius</span>
+            <span class="member-pill">João Miguel</span>
+            <span class="member-pill">Karol</span>
+            <span class="member-pill">Lucas Cirino</span>
+            <span class="member-pill">Murilo</span>
+          </div>
+        </div>
+
+        <!-- Pesquisa e Apresentação -->
+        <div class="startup-dept-card">
+          <div class="startup-dept-title">🎤 Pesquisa e Apresentação</div>
+          <div class="startup-members">
+            <span class="member-pill">Alice</span>
+            <span class="member-pill">Heloisa</span>
+            <span class="member-pill">Lucas Cronemberger</span>
+            <span class="member-pill">Maria Eduarda</span>
+            <span class="member-pill">Maria Julia</span>
+            <span class="member-pill">Pedro Costa</span>
+            <span class="member-pill">Matheus</span>
+          </div>
+        </div>
+
+        <!-- Apoio Estratégico -->
+        <div class="startup-dept-card">
+          <div class="startup-dept-title">🔄 Apoio Estratégico</div>
+          <div class="startup-members">
+            <span class="member-pill">Lilian</span>
+            <span class="member-pill">Maria Jullia B.</span>
+            <span class="member-pill">Pedro Felipe</span>
+            <span class="member-pill">Thiago</span>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <!-- Overlay Experiência "Sentir na Pele (Perspectiva TEA)" -->
+  <div class="tea-overlay" id="tea-overlay" role="dialog" aria-modal="true" aria-labelledby="tea-modal-title">
+    <div class="tea-modal phase-overload" id="tea-modal">
+      <div class="tea-modal-header">
+        <span class="tea-modal-badge" id="tea-modal-badge">⚠️ Sobrecarga Auditiva</span>
+        <button type="button" class="btn-tea-close" id="btn-tea-close">✕ Fechar</button>
+      </div>
+      <h3 id="tea-modal-title">Como múltiplos ruídos fragmentam o foco</h3>
+      <div class="tea-noise-fragments" id="tea-dynamic-content"></div>
+      <div class="tea-progress-track">
+        <div class="tea-progress-bar" id="tea-progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Code Flutuante (Apenas Desktop >= 1024px) -->
+  <aside class="qr-floating-card" aria-label="QR Code para abrir no celular">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&amp;data=https://luisfpatrocinio.github.io/NoiseLight/" alt="QR Code para acessar NoiseLight no celular" width="140" height="140" loading="lazy">
+    <span>📱 Abra no seu celular</span>
+  </aside>
 
   <!-- Rodapé Oficial da Feira -->
   <footer>
