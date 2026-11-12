@@ -839,91 +839,91 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===========================================================================
   const codeDatabase = {
     complete: {
-      code: `// --- CÓDIGO COMPLETO DO FIRMWARE (src/main.cpp) ---
-#include &lt;Arduino.h&gt;
+      code: `<span class="hl-com">// --- CÓDIGO COMPLETO DO FIRMWARE (src/main.cpp) ---</span>
+<span class="hl-pp">#include</span> <span class="hl-str">&lt;Arduino.h&gt;</span>
 
-const int PINO_SENSOR_SOM   = 4;  // OUT do MAX4466 (Entrada Analógica D4)
-const int PINO_LED_VERDE     = 18; // LED 10mm Verde (D18)
-const int PINO_LED_AMARELO   = 19; // LED 10mm Amarelo (D19)
-const int PINO_LED_VERMELHO  = 21; // LED 10mm Vermelho (D21)
+<span class="hl-kw">const</span> <span class="hl-type">int</span> PINO_SENSOR_SOM   = <span class="hl-num">4</span>;  <span class="hl-com">// OUT do MAX4466 (Entrada Analógica D4)</span>
+<span class="hl-kw">const</span> <span class="hl-type">int</span> PINO_LED_VERDE     = <span class="hl-num">18</span>; <span class="hl-com">// LED 10mm Verde (D18)</span>
+<span class="hl-kw">const</span> <span class="hl-type">int</span> PINO_LED_AMARELO   = <span class="hl-num">19</span>; <span class="hl-com">// LED 10mm Amarelo (D19)</span>
+<span class="hl-kw">const</span> <span class="hl-type">int</span> PINO_LED_VERMELHO  = <span class="hl-num">21</span>; <span class="hl-com">// LED 10mm Vermelho (D21)</span>
 
-int limiarAmarelo  = 900;  // Acima deste valor passa para Amarelo
-int limiarVermelho = 2200; // Acima deste valor passa para Vermelho
+<span class="hl-type">int</span> limiarAmarelo  = <span class="hl-num">900</span>;  <span class="hl-com">// Acima deste valor passa para Amarelo</span>
+<span class="hl-type">int</span> limiarVermelho = <span class="hl-num">2200</span>; <span class="hl-com">// Acima deste valor passa para Vermelho</span>
 
-void setup() {
-  Serial.begin(115200);
-  analogReadResolution(12); // ADC do ESP32: 0 a 4095
-  analogSetPinAttenuation(PINO_SENSOR_SOM, ADC_11db);
+<span class="hl-type">void</span> <span class="hl-func">setup</span>() {
+  <span class="hl-func">Serial</span>.<span class="hl-func">begin</span>(<span class="hl-num">115200</span>);
+  <span class="hl-func">analogReadResolution</span>(<span class="hl-num">12</span>); <span class="hl-com">// ADC do ESP32: 0 a 4095</span>
+  <span class="hl-func">analogSetPinAttenuation</span>(PINO_SENSOR_SOM, <span class="hl-const">ADC_11db</span>);
 
-  pinMode(PINO_LED_VERDE, OUTPUT);
-  pinMode(PINO_LED_AMARELO, OUTPUT);
-  pinMode(PINO_LED_VERMELHO, OUTPUT);
+  <span class="hl-func">pinMode</span>(PINO_LED_VERDE, <span class="hl-const">OUTPUT</span>);
+  <span class="hl-func">pinMode</span>(PINO_LED_AMARELO, <span class="hl-const">OUTPUT</span>);
+  <span class="hl-func">pinMode</span>(PINO_LED_VERMELHO, <span class="hl-const">OUTPUT</span>);
 }
 
-void loop() {
-  // Amostragem Pico-a-Pico durante 50ms
-  int amplitude = medirAmplitudePicoAPico(50);
-  atualizarSemaforo(amplitude);
+<span class="hl-type">void</span> <span class="hl-func">loop</span>() {
+  <span class="hl-com">// Amostragem Pico-a-Pico durante 50ms</span>
+  <span class="hl-type">int</span> amplitude = <span class="hl-func">medirAmplitudePicoAPico</span>(<span class="hl-num">50</span>);
+  <span class="hl-func">atualizarSemaforo</span>(amplitude);
 }`,
       explanation: 'Este é o firmware completo gravado no ESP32. Ele configura o conversor analógico-digital (ADC) para ler o microfone analógico MAX4466 no pino D4 e aciona os LEDs difusores de 10mm nos pinos D18, D19 e D21.'
     },
 
     sampling: {
-      code: `// --- LEITURA DO MAX4466 (PICO-A-PICO) ---
-int medirAmplitudePicoAPico(unsigned long duracaoMs) {
-  unsigned long tempoInicio = millis();
-  int valorMin = 4095;
-  int valorMax = 0;
+      code: `<span class="hl-com">// --- LEITURA DO MAX4466 (PICO-A-PICO) ---</span>
+<span class="hl-type">int</span> <span class="hl-func">medirAmplitudePicoAPico</span>(<span class="hl-type">unsigned long</span> duracaoMs) {
+  <span class="hl-type">unsigned long</span> tempoInicio = <span class="hl-func">millis</span>();
+  <span class="hl-type">int</span> valorMin = <span class="hl-num">4095</span>;
+  <span class="hl-type">int</span> valorMax = <span class="hl-num">0</span>;
 
-  // Lê a onda de som continuamente durante 50 milissegundos
-  while (millis() - tempoInicio &lt; duracaoMs) {
-    int leitura = analogRead(PINO_SENSOR_SOM);
-    if (leitura &gt; valorMax) valorMax = leitura;
-    if (leitura &lt; valorMin) valorMin = leitura;
+  <span class="hl-com">// Lê a onda de som continuamente durante 50 milissegundos</span>
+  <span class="hl-kw">while</span> (<span class="hl-func">millis</span>() - tempoInicio &lt; duracaoMs) {
+    <span class="hl-type">int</span> leitura = <span class="hl-func">analogRead</span>(PINO_SENSOR_SOM);
+    <span class="hl-kw">if</span> (leitura &gt; valorMax) valorMax = leitura;
+    <span class="hl-kw">if</span> (leitura &lt; valorMin) valorMin = leitura;
   }
 
-  // Amplitude = diferença entre a crista mais alta e o vale mais baixo
-  return (valorMax - valorMin);
+  <span class="hl-com">// Amplitude = diferença entre a crista mais alta e o vale mais baixo</span>
+  <span class="hl-kw">return</span> (valorMax - valorMin);
 }`,
       explanation: 'O módulo MAX4466 entrega uma onda analógica contínua. Durante 50ms, o ESP32 mede repetidamente a onda e calcula a amplitude Pico a Pico (Valor Máximo - Valor Mínimo). Em silêncio, a amplitude é muito baixa (~100). Ao falar ou gritar, a onda oscila com força e a amplitude passa de 2000!'
     },
 
     decision: {
-      code: `// --- LÓGICA DE DECISÃO DO SEMÁFORO ---
-void atualizarSemaforo(int amplitude) {
-  unsigned long agora = millis();
+      code: `<span class="hl-com">// --- LÓGICA DE DECISÃO DO SEMÁFORO ---</span>
+<span class="hl-type">void</span> <span class="hl-func">atualizarSemaforo</span>(<span class="hl-type">int</span> amplitude) {
+  <span class="hl-type">unsigned long</span> agora = <span class="hl-func">millis</span>();
 
-  // Se atingiu o nível crítico, ativa a retenção temporária (Peak Hold)
-  if (amplitude &gt;= limiarVermelho) {
+  <span class="hl-com">// Se atingiu o nível crítico, ativa a retenção temporária (Peak Hold)</span>
+  <span class="hl-kw">if</span> (amplitude &gt;= limiarVermelho) {
     ultimoTempoVermelho = agora;
   }
 
-  // Mantém no vermelho por 1,5s para não oscilar a cada pausa de voz
-  if (agora - ultimoTempoVermelho &lt; 1500) {
-    alertarVermelhoPiscando();
+  <span class="hl-com">// Mantém no vermelho por 1,5s para não oscilar a cada pausa de voz</span>
+  <span class="hl-kw">if</span> (agora - ultimoTempoVermelho &lt; <span class="hl-num">1500</span>) {
+    <span class="hl-func">alertarVermelhoPiscando</span>();
   } 
-  else if (amplitude &gt;= limiarAmarelo) {
-    acenderSomenteAmarelo();
+  <span class="hl-kw">else if</span> (amplitude &gt;= limiarAmarelo) {
+    <span class="hl-func">acenderSomenteAmarelo</span>();
   } 
-  else {
-    acenderSomenteVerde();
+  <span class="hl-kw">else</span> {
+    <span class="hl-func">acenderSomenteVerde</span>();
   }
 }`,
       explanation: 'Aqui o ESP32 atua como o juiz visual da sala. Usando condicionais (if / else if / else), ele compara a amplitude sonora com os limiares. O "Peak Hold" de 1,5 segundo garante que se alguém grita, o vermelho permanece ativo tempo suficiente para a turma se autorregular.'
     },
 
     nonblocking: {
-      code: `// --- ALERTA PISCANTE NÃO-BLOQUEANTE ---
-void alertarVermelhoPiscando() {
-  digitalWrite(PINO_LED_VERDE, LOW);
-  digitalWrite(PINO_LED_AMARELO, LOW);
+      code: `<span class="hl-com">// --- ALERTA PISCANTE NÃO-BLOQUEANTE ---</span>
+<span class="hl-type">void</span> <span class="hl-func">alertarVermelhoPiscando</span>() {
+  <span class="hl-func">digitalWrite</span>(PINO_LED_VERDE, <span class="hl-const">LOW</span>);
+  <span class="hl-func">digitalWrite</span>(PINO_LED_AMARELO, <span class="hl-const">LOW</span>);
 
-  // Pisca o LED Vermelho a cada 120ms sem usar delay()
-  unsigned long agora = millis();
-  if (agora - ultimoPiscaVermelho &gt;= 120) {
+  <span class="hl-com">// Pisca o LED Vermelho a cada 120ms sem usar delay()</span>
+  <span class="hl-type">unsigned long</span> agora = <span class="hl-func">millis</span>();
+  <span class="hl-kw">if</span> (agora - ultimoPiscaVermelho &gt;= <span class="hl-num">120</span>) {
     ultimoPiscaVermelho = agora;
     estadoPiscaVermelho = !estadoPiscaVermelho;
-    digitalWrite(PINO_LED_VERMELHO, estadoPiscaVermelho ? HIGH : LOW);
+    <span class="hl-func">digitalWrite</span>(PINO_LED_VERMELHO, estadoPiscaVermelho ? <span class="hl-const">HIGH</span> : <span class="hl-const">LOW</span>);
   }
 }`,
       explanation: 'Para piscar o LED vermelho de alerta estroboscópico sem travar o processamento do ESP32, usamos a função millis() em vez de delay(). Isso permite que o microcontrolador continue medindo o som do microfone em segundo plano sem qualquer interrupção!'
@@ -960,6 +960,132 @@ void alertarVermelhoPiscando() {
       }, 2000);
     });
   }
+
+  // ===========================================================================
+  // 7. QUIZ RELÂMPAGO DE REVISÃO (GUIA DE ESTUDOS)
+  // ===========================================================================
+  const quizQuestions = [
+    {
+      q: '1. O que o módulo microfone MAX4466 envia para o pino D4 (GPIO 4) do ESP32?',
+      options: [
+        'Um sinal analógico contínuo que varia conforme a onda sonora',
+        'Apenas uma mensagem de texto via Wi-Fi com os decibéis',
+        'Uma corrente de 220 Volts direto da tomada',
+        'Apenas um pulso fixo sem variação de intensidade'
+      ],
+      correct: 0,
+      explain: 'Isso mesmo! O MAX4466 é um microfone analógico pré-amplificado: sua saída OUT oscila entre 0V e 3,3V (centrada em 1,65V) acompanhando as vibrações reais da voz.'
+    },
+    {
+      q: '2. Para que servem os resistores de 220 Ω ligados em série com os LEDs de 10mm?',
+      options: [
+        'Para amplificar o som que sai dos LEDs',
+        'Para limitar a corrente elétrica e evitar que os LEDs e o ESP32 queimem',
+        'Para mudar a cor do LED de verde para vermelho',
+        'Para conectar o ESP32 à internet da escola'
+      ],
+      correct: 1,
+      explain: 'Perfeito! Pela Lei de Ohm (I = V / R), o resistor absorve a diferença entre os 3,3V do ESP32 e os ~2,0V do LED, mantendo a corrente elétrica segura (~6 a 10 mA).'
+    },
+    {
+      q: '3. Como o código calcula o volume do barulho durante os 50 milissegundos de leitura?',
+      options: [
+        'Lê apenas uma única vez por minuto',
+        'Conta quantas pessoas estão falando pelo Bluetooth',
+        'Calcula a amplitude Pico-a-Pico (Maior Pico − Menor Vale da onda)',
+        'Mede a temperatura do chip do ESP32'
+      ],
+      correct: 2,
+      explain: 'Exato! Como a onda sonora sobe e desce rapidamente, o ESP32 coleta o máximo e o mínimo durante 50 ms e calcula a amplitude Pico-a-Pico.'
+    },
+    {
+      q: '4. Por que usamos meias bolinhas de ping-pong nos LEDs e millis() para piscar o vermelho?',
+      options: [
+        'Para deixar a luz suave (difusor) e piscar o alerta sem travar a leitura do som',
+        'Porque o código só funciona com bolinhas de plástico',
+        'Para gastar mais bateria e travar o microfone durante 1 segundo',
+        'Apenas para esconder os fios dentro das bolinhas'
+      ],
+      correct: 0,
+      explain: 'Mandou bem! As bolinhas difundem a luz para não agredir olhos sensíveis, e o millis() permite piscar o vermelho sem congelar o processador como o delay() faria.'
+    }
+  ];
+
+  const quizProgressLabel = document.getElementById('quiz-progress-label');
+  const quizScoreBadge = document.getElementById('quiz-score-badge');
+  const quizQuestionText = document.getElementById('quiz-question-text');
+  const quizOptionsEl = document.getElementById('quiz-options');
+  const quizFeedbackEl = document.getElementById('quiz-feedback');
+  const btnQuizNext = document.getElementById('btn-quiz-next');
+
+  let quizIndex = 0;
+  let quizScore = 0;
+
+  function renderQuizQuestion() {
+    if (!quizQuestionText || !quizOptionsEl) return;
+    const item = quizQuestions[quizIndex];
+
+    quizProgressLabel.innerText = `Pergunta ${quizIndex + 1} de ${quizQuestions.length}`;
+    quizScoreBadge.innerText = `Acertos: ${quizScore}`;
+    quizQuestionText.innerText = item.q;
+    quizFeedbackEl.className = 'quiz-feedback';
+    quizFeedbackEl.innerText = '';
+    btnQuizNext.classList.remove('show');
+    quizOptionsEl.innerHTML = '';
+
+    item.options.forEach((optText, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quiz-option-btn';
+      btn.innerText = optText;
+      btn.addEventListener('click', () => handleQuizAnswer(idx, btn));
+      quizOptionsEl.appendChild(btn);
+    });
+  }
+
+  function handleQuizAnswer(selectedIdx, clickedBtn) {
+    const item = quizQuestions[quizIndex];
+    const allBtns = quizOptionsEl.querySelectorAll('.quiz-option-btn');
+    allBtns.forEach((b, i) => {
+      b.disabled = true;
+      if (i === item.correct) {
+        b.classList.add('is-correct');
+      }
+    });
+
+    if (selectedIdx === item.correct) {
+      quizScore += 1;
+      quizScoreBadge.innerText = `Acertos: ${quizScore}`;
+      quizFeedbackEl.className = 'quiz-feedback show ok';
+      quizFeedbackEl.innerText = '✅ ' + item.explain;
+    } else {
+      clickedBtn.classList.add('is-wrong');
+      quizFeedbackEl.className = 'quiz-feedback show err';
+      quizFeedbackEl.innerText = '💡 Quase lá! ' + item.explain;
+    }
+
+    if (quizIndex < quizQuestions.length - 1) {
+      btnQuizNext.innerHTML = 'Próxima Pergunta &rarr;';
+    } else {
+      btnQuizNext.innerHTML = '🔄 Ver Resultado &amp; Refazer';
+    }
+    btnQuizNext.classList.add('show');
+  }
+
+  if (btnQuizNext) {
+    btnQuizNext.addEventListener('click', () => {
+      if (quizIndex < quizQuestions.length - 1) {
+        quizIndex += 1;
+        renderQuizQuestion();
+      } else {
+        quizIndex = 0;
+        quizScore = 0;
+        renderQuizQuestion();
+      }
+    });
+  }
+
+  renderQuizQuestion();
 
   updateNoiseLevel(5, 'init');
 });

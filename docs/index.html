@@ -38,6 +38,7 @@
         <li><a href="#secao-jornada">Jornada do Som</a></li>
         <li><a href="#secao-montagem">Montagem</a></li>
         <li><a href="#secao-codigo">Código</a></li>
+        <li><a href="#secao-guia-estudo">Guia de Estudos</a></li>
         <li><a href="#secao-startup">Equipe</a></li>
       </ul>
       <div class="header-actions">
@@ -478,31 +479,31 @@
           <button type="button" class="btn-copy-code" id="btn-copy-code">📋 Copiar Código</button>
         </div>
 
-        <pre class="code-content"><code id="code-display">// --- CÓDIGO COMPLETO DO FIRMWARE (src/main.cpp) ---
-#include &lt;Arduino.h&gt;
+        <pre class="code-content"><code id="code-display"><span class="hl-com">// --- CÓDIGO COMPLETO DO FIRMWARE (src/main.cpp) ---</span>
+<span class="hl-pp">#include</span> <span class="hl-str">&lt;Arduino.h&gt;</span>
 
-const int PINO_SENSOR_SOM   = 4;  // OUT do MAX4466 (Entrada Analógica D4)
-const int PINO_LED_VERDE     = 18; // LED 10mm Verde (D18)
-const int PINO_LED_AMARELO   = 19; // LED 10mm Amarelo (D19)
-const int PINO_LED_VERMELHO  = 21; // LED 10mm Vermelho (D21)
+<span class="hl-kw">const</span> <span class="hl-type">int</span> PINO_SENSOR_SOM   = <span class="hl-num">4</span>;  <span class="hl-com">// OUT do MAX4466 (Entrada Analógica D4)</span>
+<span class="hl-kw">const</span> <span class="hl-type">int</span> PINO_LED_VERDE     = <span class="hl-num">18</span>; <span class="hl-com">// LED 10mm Verde (D18)</span>
+<span class="hl-kw">const</span> <span class="hl-type">int</span> PINO_LED_AMARELO   = <span class="hl-num">19</span>; <span class="hl-com">// LED 10mm Amarelo (D19)</span>
+<span class="hl-kw">const</span> <span class="hl-type">int</span> PINO_LED_VERMELHO  = <span class="hl-num">21</span>; <span class="hl-com">// LED 10mm Vermelho (D21)</span>
 
-int limiarAmarelo  = 900;  // Acima deste valor passa para Amarelo
-int limiarVermelho = 2200; // Acima deste valor passa para Vermelho
+<span class="hl-type">int</span> limiarAmarelo  = <span class="hl-num">900</span>;  <span class="hl-com">// Acima deste valor passa para Amarelo</span>
+<span class="hl-type">int</span> limiarVermelho = <span class="hl-num">2200</span>; <span class="hl-com">// Acima deste valor passa para Vermelho</span>
 
-void setup() {
-  Serial.begin(115200);
-  analogReadResolution(12); // ADC do ESP32: 0 a 4095
-  analogSetPinAttenuation(PINO_SENSOR_SOM, ADC_11db);
+<span class="hl-type">void</span> <span class="hl-func">setup</span>() {
+  <span class="hl-func">Serial</span>.<span class="hl-func">begin</span>(<span class="hl-num">115200</span>);
+  <span class="hl-func">analogReadResolution</span>(<span class="hl-num">12</span>); <span class="hl-com">// ADC do ESP32: 0 a 4095</span>
+  <span class="hl-func">analogSetPinAttenuation</span>(PINO_SENSOR_SOM, <span class="hl-const">ADC_11db</span>);
 
-  pinMode(PINO_LED_VERDE, OUTPUT);
-  pinMode(PINO_LED_AMARELO, OUTPUT);
-  pinMode(PINO_LED_VERMELHO, OUTPUT);
+  <span class="hl-func">pinMode</span>(PINO_LED_VERDE, <span class="hl-const">OUTPUT</span>);
+  <span class="hl-func">pinMode</span>(PINO_LED_AMARELO, <span class="hl-const">OUTPUT</span>);
+  <span class="hl-func">pinMode</span>(PINO_LED_VERMELHO, <span class="hl-const">OUTPUT</span>);
 }
 
-void loop() {
-  // Amostragem Pico-a-Pico durante 50ms
-  int amplitude = medirAmplitudePicoAPico(50);
-  atualizarSemaforo(amplitude);
+<span class="hl-type">void</span> <span class="hl-func">loop</span>() {
+  <span class="hl-com">// Amostragem Pico-a-Pico durante 50ms</span>
+  <span class="hl-type">int</span> amplitude = <span class="hl-func">medirAmplitudePicoAPico</span>(<span class="hl-num">50</span>);
+  <span class="hl-func">atualizarSemaforo</span>(amplitude);
 }</code></pre>
 
         <div class="code-explanation">
@@ -510,6 +511,200 @@ void loop() {
           <p id="code-explanation-text">
             Este é o firmware completo gravado no ESP32. Ele configura o conversor analógico-digital (ADC) para ler o microfone analógico MAX4466 no pino D4 e controla as saídas digitais D18, D19 e D21 para acionar os LEDs difusores de 10mm.
           </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- GUIA DE ESTUDOS & PREPARAÇÃO PARA A FEIRA                -->
+    <!-- ======================================================== -->
+    <section id="secao-guia-estudo" class="section-card">
+      <div class="section-header">
+        <div>
+          <span class="section-badge">Preparação dos Alunos &bull; 6º Ano A</span>
+          <h2 class="section-title">📚 Guia de Estudos: Tudo para Brilhar na Feira</h2>
+          <p class="section-desc">
+            Estude por aqui no celular ou computador! Entenda em linguagem simples os <strong>detalhes da tecnologia por trás</strong> do Semáforo do Barulho, treine seu roteiro de apresentação e responda às perguntas dos avaliadores.
+          </p>
+        </div>
+      </div>
+
+      <!-- 1. Detalhes da Tecnologia por Trás -->
+      <h3 class="study-sub-heading">🔬 1. Detalhes da Tecnologia por Trás do Projeto</h3>
+      <div class="study-tech-grid">
+        <!-- Tecnologia 1: ESP32 -->
+        <div class="study-tech-card">
+          <div class="study-tech-header">
+            <div class="study-tech-icon">🧠</div>
+            <div>
+              <h3>O Cérebro: Microcontrolador ESP32</h3>
+              <span class="study-tech-tag">Processamento &amp; Conversão Analógica (ADC)</span>
+            </div>
+          </div>
+          <ul class="study-points">
+            <li><strong>O que é:</strong> Um microcontrolador rápido (processador Dual-Core de 240 MHz) que executa o nosso código em C++ sem parar.</li>
+            <li><strong>Como ele lê o som:</strong> O pino <code>D4 (GPIO 4)</code> funciona como um <strong>ADC de 12 bits</strong>, convertendo a voltagem elétrica (0V a 3,3V) em um número de <strong>0 a 4095</strong>.</li>
+            <li><strong>Truque de montagem:</strong> Como a placa é larga na protoboard, usamos toda a fiação concentrada na lateral do pino <code>3V3</code> (<code>D4</code> para ouvir, <code>D18</code>, <code>D19</code> e <code>D21</code> para acender os LEDs).</li>
+          </ul>
+          <div class="study-explain-tip">
+            <strong>💬 Como explicar na feira:</strong> "O ESP32 é o cérebro do projeto. Ele transforma a energia elétrica que vem do microfone em números de 0 a 4095 e decide qual cor acender."
+          </div>
+        </div>
+
+        <!-- Tecnologia 2: MAX4466 -->
+        <div class="study-tech-card">
+          <div class="study-tech-header">
+            <div class="study-tech-icon">🎙️</div>
+            <div>
+              <h3>O Ouvido: Módulo Microfone MAX4466</h3>
+              <span class="study-tech-tag">Captação Analógica &amp; Pré-Amplificação</span>
+            </div>
+          </div>
+          <ul class="study-points">
+            <li><strong>Sinal analógico real:</strong> Diferente de sensores simples (que só dizem "tem som" ou "não tem"), o MAX4466 envia a onda sonora completa pelo pino <code>OUT</code>.</li>
+            <li><strong>Centro em 1,65V:</strong> Alimentado em <code>3.3V</code> (mais limpo e com menos ruído), no silêncio a saída repousa na metade (1,65V, leitura ~2048). Com barulho, a onda oscila para cima e para baixo.</li>
+            <li><strong>Trimpot traseiro:</strong> Atrás da plaquinha há um parafusinho que ajusta o ganho (de <strong>25× até 125×</strong>) conforme a acústica do local.</li>
+          </ul>
+          <div class="study-explain-tip">
+            <strong>💬 Como explicar na feira:</strong> "O MAX4466 capta a vibração da nossa voz, amplifica o sinal elétrico e manda a onda sonora real para o ESP32 analisar."
+          </div>
+        </div>
+
+        <!-- Tecnologia 3: LEDs 10mm + Difusores + Resistores -->
+        <div class="study-tech-card">
+          <div class="study-tech-header">
+            <div class="study-tech-icon">🚦</div>
+            <div>
+              <h3>Os Olhos: LEDs 10mm, Ping-Pong &amp; Resistores</h3>
+              <span class="study-tech-tag">Óptica Suave &amp; Proteção Elétrica</span>
+            </div>
+          </div>
+          <ul class="study-points">
+            <li><strong>Polaridade dos LEDs de 10mm:</strong> A perna maior é o positivo (<strong>Ânodo</strong>) e recebe o sinal do ESP32; a menor é o negativo (<strong>Cátodo</strong>) ligada ao <code>GND</code>.</li>
+            <li><strong>Por que bolinhas de ping-pong?</strong> Elas funcionam como <strong>difusores ópticos</strong>: espalham a luz forte do LED de forma macia e uniforme para não agredir os olhos de colegas sensíveis à luz.</li>
+            <li><strong>Resistores de 220 &Omega;:</strong> O ESP32 manda 3,3V, mas o LED só precisa de ~2,0V. Pela <strong>Lei de Ohm</strong> (<em>I = V/R</em>), o resistor segura a corrente em ~6 a 10 mA para não queimar o LED.</li>
+          </ul>
+          <div class="study-explain-tip">
+            <strong>💬 Como explicar na feira:</strong> "Os resistores protegem os LEDs como um redutor de velocidade, e as bolinhas de ping-pong deixam a luz suave para o conforto visual."
+          </div>
+        </div>
+
+        <!-- Tecnologia 4: Matemática e Lógica do Código -->
+        <div class="study-tech-card">
+          <div class="study-tech-header">
+            <div class="study-tech-icon">⚙️</div>
+            <div>
+              <h3>A Inteligência: Janela 50ms, Filtro &amp; <code>millis()</code></h3>
+              <span class="study-tech-tag">Algoritmo de Estabilidade Acústica</span>
+            </div>
+          </div>
+          <ul class="study-points">
+            <li><strong>Pico-a-Pico (50ms):</strong> O som vibra rápido demais para 1 leitura só. Durante 50 ms, o código lê sem parar e calcula <code>Amplitude = Maior Pico - Menor Vale</code>.</li>
+            <li><strong>Filtro de suavização:</strong> Faz uma média contínua para ignorar barulhos curtinhos isolados (como um lápis caindo), só mudando de cor quando o som tem presença real.</li>
+            <li><strong>Peak Hold &amp; <code>millis()</code>:</strong> Quando bate no Vermelho, segura por <strong>1,5 segundo</strong> e pisca usando o relógio interno <code>millis()</code> sem travar a leitura do microfone!</li>
+          </ul>
+          <div class="study-explain-tip">
+            <strong>💬 Como explicar na feira:</strong> "Nosso código mede o tamanho da onda a cada 50 milissegundos e usa um filtro inteligente para o semáforo não ficar piscando à toa."
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Roteiro de 1 Minuto para o Estande -->
+      <h3 class="study-sub-heading">📋 2. Roteiro Amigável de Apresentação (Passo a Passo)</h3>
+      <div class="pitch-grid">
+        <div class="pitch-card">
+          <span class="pitch-step-num">1. O Problema (15s)</span>
+          <h4>Por que criamos o projeto?</h4>
+          <div class="pitch-summary">
+            <strong>📌 Resumo rápido:</strong> Quando a sala fica muito barulhenta, colegas com Autismo (TEA) sentem desconforto e dor nos ouvidos, e quem tem TDAH perde a concentração. O Semáforo ajuda sem ninguém precisar gritar.
+          </div>
+          <div class="pitch-speech">
+            <strong>🗣️ Como você pode falar:</strong> <em>"Oi! Você já reparou como uma sala de aula barulhenta cansa todo mundo? Para colegas com autismo, esse barulho pode até machucar os ouvidos, e para quem tem TDAH fica difícil prestar atenção. A gente quis resolver isso de um jeito gentil, sem o professor ter que gritar!"</em>
+          </div>
+        </div>
+        <div class="pitch-card">
+          <span class="pitch-step-num">2. A Solução (15s)</span>
+          <h4>Como o Semáforo funciona?</h4>
+          <div class="pitch-summary">
+            <strong>📌 Resumo rápido:</strong> Ele funciona como um semáforo de trânsito para o som: Verde significa tudo tranquilo, Amarelo pede para falar mais baixo e Vermelho piscando avisa que passou do limite.
+          </div>
+          <div class="pitch-speech">
+            <strong>🗣️ Como você pode falar:</strong> <em>"Nosso Semáforo do Barulho é um ajudante silencioso! Quando a luz está Verde, o som está ótimo para estudar. Se subir um pouco, fica Amarela para a turma perceber sozinha e baixar a voz. E se ficar muito alto, a luz Vermelha pisca na hora!"</em>
+          </div>
+        </div>
+        <div class="pitch-card">
+          <span class="pitch-step-num">3. A Tecnologia (20s)</span>
+          <h4>O que tem por dentro?</h4>
+          <div class="pitch-summary">
+            <strong>📌 Resumo rápido:</strong> Um microfone (MAX4466) ouve o som da sala e manda o sinal para o ESP32 (o cérebro). Ele mede a força da onda sonora em 50 milissegundos e acende a cor certa nos LEDs.
+          </div>
+          <div class="pitch-speech">
+            <strong>🗣️ Como você pode falar:</strong> <em>"Por dentro usamos um sensor de microfone ligado num mini-computador chamado ESP32. A cada 50 milissegundos, ele mede a força do som da sala. Se o número passar do limite que programamos, ele acende o LED Verde, Amarelo ou Vermelho, usando bolinhas de ping-pong para espalhar a luz sem ofuscar."</em>
+          </div>
+        </div>
+        <div class="pitch-card">
+          <span class="pitch-step-num">4. Demonstração (10s)</span>
+          <h4>Hora de testar ao vivo!</h4>
+          <div class="pitch-summary">
+            <strong>📌 Resumo rápido:</strong> Convide o visitante para participar! Testar na prática deixa a apresentação muito mais divertida e prova que o projeto funciona de verdade.
+          </div>
+          <div class="pitch-speech">
+            <strong>🗣️ Como você pode falar:</strong> <em>"Quer testar agora? Pode falar perto do microfone ou bater palmas para ver o semáforo mudar de cor! E se quiser, você também pode clicar no botão 'Sentir na Pele' aqui no site para entender como o barulho afeta quem tem sensibilidade auditiva."</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Perguntas Frequentes dos Avaliadores -->
+      <h3 class="study-sub-heading">🎤 3. Perguntas que os Avaliadores Costumam Fazer (Clique para Abrir)</h3>
+      <div class="faq-accordion">
+        <details class="faq-item">
+          <summary class="faq-question">1. Por que usar o microfone MAX4466 em vez de um sensor de som digital comum?</summary>
+          <div class="faq-answer">
+            Sensores digitais baratos (como o KY-038) normalmente só entregam "0 ou 1" quando um som passa de um limite fixo no parafuso. Já o <strong>MAX4466 é analógico</strong>: ele envia a onda sonora completa em 4096 níveis de detalhe para o ESP32, permitindo medir intensidade real, aplicar filtros contra estalos falsos e distinguir conversa moderada de gritaria.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">2. Por que vocês não fizeram apenas um aplicativo no celular?</summary>
+          <div class="faq-answer">
+            Um celular na sala de aula distrai a turma, precisa de carregamento constante e tem custo alto para ficar fixo na parede. Com o <strong>ESP32</strong>, criamos um dispositivo dedicado, de baixo custo, que liga direto na tomada USB e funciona sozinho 100% focado em ajudar a turma.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">3. O ginásio da feira está muito barulhento! Como o semáforo não fica travado no vermelho?</summary>
+          <div class="faq-answer">
+            Nós preparamos calibração dupla! Na placa física, ajustamos o <strong>trimpot traseiro do MAX4466</strong> e podemos enviar comandos <code>+</code> ou <code>-</code> pela USB para subir os limiares (900 / 2200). E aqui no simulador da página temos o slider de <strong>Calibração de Ruído da Feira (Offset)</strong> que compensa o barulho do ginásio ao vivo!
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">4. Para que servem os resistores de 220 &Omega; antes dos LEDs?</summary>
+          <div class="faq-answer">
+            Cada pino do ESP32 entrega <strong>3,3 Volts</strong>, mas um LED trabalha com cerca de <strong>2,0 Volts</strong>. Pela Lei de Ohm (<em>I = V / R</em>), o resistor segura o excesso de corrente elétrica em cerca de 6 a 10 miliamperes, evitando que os LEDs de 10mm ou os pinos do ESP32 queimem.
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">5. Por que o código usa <code>millis()</code> em vez de <code>delay()</code> para piscar o vermelho?</summary>
+          <div class="faq-answer">
+            A função <code>delay()</code> "congela" o processador durante a pausa — se usássemos ela, o microfone ficaria surdo enquanto o LED pisca! Usando <code>millis()</code> (o cronômetro interno do ESP32), o LED pisca a cada 120 ms enquanto o microfone continua lendo o som da sala sem interrupção.
+          </div>
+        </details>
+      </div>
+
+      <!-- 4. Quiz Relâmpago de Revisão -->
+      <h3 class="study-sub-heading">🧠 4. Quiz Relâmpago: Teste seus Conhecimentos!</h3>
+      <div class="quiz-box" id="study-quiz-box">
+        <div class="quiz-header">
+          <span style="font-weight:700; color: var(--brand-primary);" id="quiz-progress-label">Pergunta 1 de 4</span>
+          <span class="quiz-score-badge" id="quiz-score-badge">Acertos: 0</span>
+        </div>
+        <div class="quiz-question-text" id="quiz-question-text">Carregando pergunta...</div>
+        <div class="quiz-options" id="quiz-options"></div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+        <div class="quiz-footer">
+          <button type="button" class="btn-quiz-next" id="btn-quiz-next">Próxima Pergunta &rarr;</button>
         </div>
       </div>
     </section>
